@@ -1,0 +1,1330 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicons/apple-touch-icon.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicons/favicon-32x32.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicons/favicon-16x16.png?v=5.1.3">
+
+
+  <link rel="mask-icon" href="/images/favicons/safari-pinned-tab.svg?v=5.1.3" color="#222">
+
+
+  <link rel="manifest" href="/images/favicons/manifest.json">
+
+
+  <meta name="msapplication-config" content="/images/favicons/browserconfig.xml" />
+
+
+
+  <meta name="keywords" content="live,LINUX," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="简介Nginx是http和反向代理服务器，同时支持邮件协议（IMAP/POP3/SMTP），由俄罗斯程序设计师Igor Sysoev所开发，其代码遵循BSD许可证开源。由于其轻量，占用系统资源少，并发量强的特点，而拥有不少的用户。Nginx-rtmp-module是nginx的一个模块，开源。使用这个模块开源在nginx的基础上快速搭建起一个流媒体服务器。配合ffmpeg开源项目开源实现许多点播和">
+<meta name="keywords" content="live,LINUX">
+<meta property="og:type" content="article">
+<meta property="og:title" content="nginx-rtmp流媒体服务器">
+<meta property="og:url" content="https://discrete.dog/2016/12/25/nginx-rtmp/index.html">
+<meta property="og:site_name" content="离散汪">
+<meta property="og:description" content="简介Nginx是http和反向代理服务器，同时支持邮件协议（IMAP/POP3/SMTP），由俄罗斯程序设计师Igor Sysoev所开发，其代码遵循BSD许可证开源。由于其轻量，占用系统资源少，并发量强的特点，而拥有不少的用户。Nginx-rtmp-module是nginx的一个模块，开源。使用这个模块开源在nginx的基础上快速搭建起一个流媒体服务器。配合ffmpeg开源项目开源实现许多点播和">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="https://discrete.dog/images/20161225.png">
+<meta property="og:updated_time" content="2017-11-21T12:43:54.979Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="nginx-rtmp流媒体服务器">
+<meta name="twitter:description" content="简介Nginx是http和反向代理服务器，同时支持邮件协议（IMAP/POP3/SMTP），由俄罗斯程序设计师Igor Sysoev所开发，其代码遵循BSD许可证开源。由于其轻量，占用系统资源少，并发量强的特点，而拥有不少的用户。Nginx-rtmp-module是nginx的一个模块，开源。使用这个模块开源在nginx的基础上快速搭建起一个流媒体服务器。配合ffmpeg开源项目开源实现许多点播和">
+<meta name="twitter:image" content="https://discrete.dog/images/20161225.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.3',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":true,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://discrete.dog/2016/12/25/nginx-rtmp/"/>
+
+
+
+
+
+  <title>nginx-rtmp流媒体服务器 | 离散汪</title>
+  
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/css/prism-atom-dark.css" type="text/css"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">离散汪</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="https://about.me/xujingkai" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-books">
+          <a href="/books" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-book"></i> <br />
+            
+            Books
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            Search
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="Searching..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://discrete.dog/2016/12/25/nginx-rtmp/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="汪~">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="离散汪">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">nginx-rtmp流媒体服务器</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-12-25T15:14:13+08:00">
+                2016-12-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-eye"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <script src="\assets\js\APlayer.min.js"> </script><h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>Nginx是http和反向代理服务器，同时支持邮件协议（IMAP/POP3/SMTP），由俄罗斯程序设计师Igor Sysoev所开发，其代码遵循BSD许可证开源。由于其轻量，占用系统资源少，并发量强的特点，而拥有不少的用户。<br>Nginx-rtmp-module是nginx的一个模块，开源。使用这个模块开源在nginx的基础上快速搭建起一个流媒体服务器。配合ffmpeg开源项目开源实现许多点播和直播的基本功能。<br><a id="more"></a> </p>
+<h2 id="功能特点"><a href="#功能特点" class="headerlink" title="功能特点"></a>功能特点</h2><p>Nginx-rtmp架构的流媒体服务器具有以下一些功能特点：（翻译自官网）</p>
+<ol>
+<li>支持RTMP / HLS / MPEG-DASH协议的视频直播。测试推流可以实现rtmp 和http flv 的推流，hls和dash并没有测试推流；拉流可以实现rtmp 和hls，没有测试http flv 和dash。<br>2.支持flv/mp4格式的视频点播，支持以文件或者http的方式的输入。<br>3.支持两种流的分发模式 push and pull<br>4.可以将多直播流分别录制成flv文件<br>5.支持H264/AAC编码<br>6.支持在线转码     Onlinetranscoding with FFmpeg     转码实现也是exec ffmpeg的，理论上支持一切ffmpeg支持的库。<br>7.支持HLS (HTTP Live Streaming)需要 libavformat (&gt;= 8. 53.31.100) from ffmpeg (ffmpeg.org)<br>8.支持http回调    HTTPcallbacks (publish/play/record/update etc)<br>9.支持特定情况下调用外部程序(exec)        ffmpeg转码即采用这种方式<br>10.使用HTTPcontrol模块来 recording audio/video and dropping clients<br>11.先进内存控制技术，可以在使用少量内存的情况下完成流畅的直播功能。<br>12.可以和以下外部程序协同工作：Wirecast, FMS, Wowza, JWPlayer, FlowPlayer, StrobeMediaPlayback, ffmpeg, avconv, rtmpdump, flvstreamer等。<br>13.统计数据展示在XML / XSL文件中，友好的可读形式。<br>14.支持跨平台 Linux/FreeBSD/MacOS。</li>
+</ol>
+<h2 id="安装及配置"><a href="#安装及配置" class="headerlink" title="安装及配置"></a>安装及配置</h2><p>以下针对nginx-rtmp服务器的安装以及一些配置项做一下简单介绍。</p>
+<h3 id="安装部署"><a href="#安装部署" class="headerlink" title="安装部署"></a>安装部署</h3><h4 id="nginx-rtmp-module："><a href="#nginx-rtmp-module：" class="headerlink" title="nginx-rtmp-module："></a>nginx-rtmp-module：</h4><pre class=" language-bash"><code class="language-bash"><span class="token function">wget</span> -O nginx-rtmp-module.zip https://github.com/arut/nginx-rtmp-module/archive/master.zip
+unzip nginx-rtmp-module.zip
+</code></pre>
+<h4 id="nginx："><a href="#nginx：" class="headerlink" title="nginx："></a>nginx：</h4><pre class=" language-bash"><code class="language-bash"><span class="token function">wget</span> http://nginx.org/download/nginx-1.11.6.tar.gz
+<span class="token function">tar</span> –x zxvf nginx-1.11.6.tar.gz
+</code></pre>
+<h4 id="编译安装："><a href="#编译安装：" class="headerlink" title="编译安装："></a>编译安装：</h4><p>部署nginx-rtmp服务器除了需要nginx本身的一些支撑包和库之外，在configure的时候需要添加<code>nginx-rtmp-module</code>选项。  </p>
+<pre class=" language-bash"><code class="language-bash">./configure --prefix<span class="token operator">=</span>/usr/local/nginx --with-http_ssl_module --add-module<span class="token operator">=</span>/root/nginx-rtmp-module
+<span class="token function">make</span> <span class="token operator">&amp;&amp;</span> <span class="token function">make</span> <span class="token function">install</span>
+</code></pre>
+<h3 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h3><p>原生的nginx-rtmp的所有功能均在nginx的配置文件<code>/usr/local/nginx/conf/nginx.conf</code>中实现。<br><code>nginx.conf</code>的整体架构：</p>
+<pre class=" language-nginx"><code class="language-nginx"><span class="token comment" spellcheck="true">#rtmp配置</span>
+rtmp <span class="token punctuation">{</span>
+    <span class="token keyword">server</span> <span class="token punctuation">{</span>
+        <span class="token keyword">listen</span> <span class="token number">1935</span><span class="token punctuation">;</span>
+        chunk_size <span class="token number">4000</span>
+        application app_name <span class="token punctuation">{</span>
+        …………                    <span class="token comment" spellcheck="true">#配置项</span>
+        <span class="token punctuation">}</span>
+application app_name2 <span class="token punctuation">{</span>
+        …………                    <span class="token comment" spellcheck="true">#配置项</span>
+        <span class="token punctuation">}</span>
+
+        application vod <span class="token punctuation">{</span>
+            play <span class="token operator">/</span>var<span class="token operator">/</span>flvs<span class="token punctuation">;</span>    <span class="token comment" spellcheck="true">#video on demand</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment" spellcheck="true">#nginx配置</span>
+<span class="token keyword">http</span> <span class="token punctuation">{</span>
+<span class="token keyword">server</span> <span class="token punctuation">{</span>
+    <span class="token keyword">location</span> <span class="token operator">/</span>hls <span class="token punctuation">{</span>
+            <span class="token comment" spellcheck="true"># Serve HLS fragments</span>
+            <span class="token keyword">types</span> <span class="token punctuation">{</span>
+                application<span class="token operator">/</span>vnd<span class="token punctuation">.</span>apple<span class="token punctuation">.</span>mpegurl m3u8<span class="token punctuation">;</span>
+                video<span class="token operator">/</span>mp2t ts<span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
+            <span class="token keyword">root</span> <span class="token operator">/</span>tmp<span class="token punctuation">;</span>
+            <span class="token keyword">add_header</span> Cache<span class="token operator">-</span>Control no<span class="token operator">-</span>cache<span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>需要在<code>rtmp{ }</code>中配置各种流媒体相关的配置，在<code>http{ }</code>中配置各种http相关的配置。各个<code>application</code>独立配置，支持正则匹配。<br>以下介绍一些重要的配置项：</p>
+<h3 id="直播基本配置："><a href="#直播基本配置：" class="headerlink" title="直播基本配置："></a>直播基本配置：</h3><h4 id="rtmp推拉流"><a href="#rtmp推拉流" class="headerlink" title="rtmp推拉流"></a>rtmp推拉流</h4><p>在<code>rtmp{ server{ * } }</code>中配置以下内容</p>
+<pre class=" language-nginx"><code class="language-nginx">application mytv <span class="token punctuation">{</span>
+    live on<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>如此即配置了发布点为<code>mytv</code> 的直播频道，可以实现rtmp推流和拉流。推拉流地址：    </p>
+<pre><code>rtmp://ip:1935/mytv/stream
+</code></pre><h4 id="hls"><a href="#hls" class="headerlink" title="hls"></a>hls</h4><p>在<code>application mytv { * }</code>中配置以下内容</p>
+<pre class=" language-nginx"><code class="language-nginx">application mytv <span class="token punctuation">{</span>
+    …………        <span class="token comment" spellcheck="true">#省略其他配置</span>
+    hls on<span class="token punctuation">;</span>
+    hls_path <span class="token operator">/</span>tmp<span class="token operator">/</span>hls<span class="token punctuation">;</span>
+    hls_fragment 15s<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>在<code>http { server{ location /hls { } } }</code>中配置以下内容</p>
+<pre class=" language-nginx"><code class="language-nginx"><span class="token keyword">http</span> <span class="token punctuation">{</span>
+    <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+    <span class="token keyword">server</span> <span class="token punctuation">{</span>
+        <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+        <span class="token keyword">location</span> <span class="token operator">/</span>hls <span class="token punctuation">{</span>
+            <span class="token keyword">types</span> <span class="token punctuation">{</span>
+                application<span class="token operator">/</span>vnd<span class="token punctuation">.</span>apple<span class="token punctuation">.</span>mpegurl m3u8<span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
+            <span class="token keyword">root</span> <span class="token operator">/</span>tmp<span class="token punctuation">;</span>
+            <span class="token keyword">add_header</span> Cache<span class="token operator">-</span>Control no<span class="token operator">-</span>cache<span class="token punctuation">;</span>
+            <span class="token keyword">add_header</span> Access<span class="token operator">-</span>Control<span class="token operator">-</span><span class="token keyword">Allow</span><span class="token operator">-</span>Origin <span class="token operator">*</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>如此配置之后，这个即可进行hls拉流.<br>详细的关于hls的其他配置。如切片时间命名设置、是否加密hls等配置可以参考：<br><a href="https://github.com/arut/nginx-rtmp-module/wiki/Directives#hls" target="_blank" rel="noopener"><strong><em>hls配置文档</em></strong></a> </p>
+<h4 id="MPEG-DASH"><a href="#MPEG-DASH" class="headerlink" title="MPEG-DASH"></a>MPEG-DASH</h4><p>在<code>application</code>配置段中配置：</p>
+<pre class=" language-nginx"><code class="language-nginx">dash on<span class="token punctuation">;</span>
+dash_path <span class="token operator">/</span>tmp<span class="token operator">/</span>dash<span class="token punctuation">;</span>
+dash_fragment 15s<span class="token punctuation">;</span>
+</code></pre>
+<p>在<code>http</code>配置段中配置：</p>
+<pre class=" language-nginx"><code class="language-nginx"><span class="token keyword">http</span> <span class="token punctuation">{</span>
+    <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+    <span class="token keyword">server</span> <span class="token punctuation">{</span>
+        <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+        <span class="token keyword">location</span> <span class="token operator">/</span>dash <span class="token punctuation">{</span>
+            <span class="token keyword">root</span> <span class="token operator">/</span>tmp<span class="token punctuation">;</span>
+            <span class="token keyword">add_header</span> Cache<span class="token operator">-</span>Control no<span class="token operator">-</span>cache<span class="token punctuation">;</span>
+            <span class="token comment" spellcheck="true"># To avoid issues with cross-domain HTTP requests (e.g. during development)</span>
+            <span class="token keyword">add_header</span> Access<span class="token operator">-</span>Control<span class="token operator">-</span><span class="token keyword">Allow</span><span class="token operator">-</span>Origin <span class="token operator">*</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>MPEG-DASH 实现方式与HLS类似，具体可以查看：<br><a href="https://github.com/arut/nginx-rtmp-module/wiki/Directives#mpeg-dash" target="_blank" rel="noopener"><strong><em>mpeg-dash配置文档</em></strong></a> </p>
+<h4 id="自动转推"><a href="#自动转推" class="headerlink" title="自动转推"></a>自动转推</h4><p>当多台nginx-rtmp 服务器运行时，可以配置把流自动推到其他机器上。</p>
+<pre class=" language-nginx"><code class="language-nginx">rtmp_auto_push on<span class="token punctuation">;</span>
+rtmp_auto_push_reconnect 1s<span class="token punctuation">;</span>
+rtmp_socket_dir <span class="token operator">/</span>var<span class="token operator">/</span>sock<span class="token punctuation">;</span>
+
+rtmp <span class="token punctuation">{</span>
+    <span class="token keyword">server</span> <span class="token punctuation">{</span>
+        <span class="token keyword">listen</span> <span class="token number">1935</span><span class="token punctuation">;</span>
+        application myapp <span class="token punctuation">{</span>
+            live on<span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p><strong>此功能没有测试过，未知其具体转推是如何实现的。</strong></p>
+<h4 id="录制"><a href="#录制" class="headerlink" title="录制"></a>录制</h4><p>在<code>application mytv { * }</code>中配置以下内容</p>
+<pre class=" language-nginx"><code class="language-nginx">application mytv <span class="token punctuation">{</span>
+    …………        <span class="token comment" spellcheck="true">#省略其他配置</span>
+    <span class="token comment" spellcheck="true"># record first 1K of stream</span>
+            record all<span class="token punctuation">;</span>
+            record_path <span class="token operator">/</span>tmp<span class="token operator">/</span>av<span class="token punctuation">;</span>
+            record_max_size 1K<span class="token punctuation">;</span>
+            <span class="token comment" spellcheck="true"># append current timestamp to each flv</span>
+            record_unique on<span class="token punctuation">;</span>        <span class="token comment" spellcheck="true">#开启后每个录制文件根据时间命名</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>其他录制选项可参考：<br><a href="https://github.com/arut/nginx-rtmp-module/wiki/Directives#record" target="_blank" rel="noopener"><strong><em>record配置文档</em></strong></a> </p>
+<h4 id="转码"><a href="#转码" class="headerlink" title="转码"></a>转码</h4><p>nginx-rtmp 采用调用外部程序ffmpeg 进行转码。需要在<code>application mytv { * }</code>中配置以下内容</p>
+<pre class=" language-nginx"><code class="language-nginx">rtmp <span class="token punctuation">{</span>
+    <span class="token keyword">server</span> <span class="token punctuation">{</span>
+        <span class="token keyword">listen</span> <span class="token number">1935</span><span class="token punctuation">;</span>
+        application src <span class="token punctuation">{</span>
+            live on<span class="token punctuation">;</span>
+            exec ffmpeg <span class="token operator">-</span>i rtmp<span class="token punctuation">:</span><span class="token operator">/</span><span class="token operator">/</span>localhost<span class="token operator">/</span>src<span class="token operator">/</span><span class="token variable">$name</span>
+              <span class="token operator">-</span>c<span class="token punctuation">:</span>a libfdk_aac <span class="token operator">-</span>b<span class="token punctuation">:</span>a 32k  <span class="token operator">-</span>c<span class="token punctuation">:</span>v libx264 <span class="token operator">-</span>b<span class="token punctuation">:</span>v 128K <span class="token operator">-</span>f <span class="token keyword">flv</span> rtmp<span class="token punctuation">:</span><span class="token operator">/</span><span class="token operator">/</span>localhost<span class="token operator">/</span>hls<span class="token operator">/</span><span class="token variable">$name_low</span>
+              <span class="token operator">-</span>c<span class="token punctuation">:</span>a libfdk_aac <span class="token operator">-</span>b<span class="token punctuation">:</span>a 64k  <span class="token operator">-</span>c<span class="token punctuation">:</span>v libx264 <span class="token operator">-</span>b<span class="token punctuation">:</span>v 256k <span class="token operator">-</span>f <span class="token keyword">flv</span> rtmp<span class="token punctuation">:</span><span class="token operator">/</span><span class="token operator">/</span>localhost<span class="token operator">/</span>hls<span class="token operator">/</span><span class="token variable">$name_mid</span>
+              <span class="token operator">-</span>c<span class="token punctuation">:</span>a libfdk_aac <span class="token operator">-</span>b<span class="token punctuation">:</span>a 128k <span class="token operator">-</span>c<span class="token punctuation">:</span>v libx264 <span class="token operator">-</span>b<span class="token punctuation">:</span>v 512K <span class="token operator">-</span>f <span class="token keyword">flv</span> rtmp<span class="token punctuation">:</span><span class="token operator">/</span><span class="token operator">/</span>localhost<span class="token operator">/</span>hls<span class="token operator">/</span><span class="token variable">$name_hi</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+        application hls <span class="token punctuation">{</span>
+            live on<span class="token punctuation">;</span>
+            ……
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>exec ffmpeg 这样的配置是会在拉流请求转码流的时候触发ffmpeg 拉流转码，在多台机器做流媒体的时候，可以通过exec_pul 和exec_push 来配置在拉流时触发转码或者在推流时触发转码。</p>
+<h4 id="exec"><a href="#exec" class="headerlink" title="exec"></a>exec</h4><p>关于调用外部程序，nginx-rtmp 支持多个配置项，参考：<br><a href="https://github.com/arut/nginx-rtmp-module/wiki/Directives#exec" target="_blank" rel="noopener"><strong><em>exec配置文档</em></strong></a> </p>
+<h4 id="统计信息"><a href="#统计信息" class="headerlink" title="统计信息"></a>统计信息</h4><p>在<code>http{ server{ } }</code>中配置可以启用统计信息。 </p>
+<pre class=" language-nginx"><code class="language-nginx"><span class="token keyword">http</span> <span class="token punctuation">{</span>
+    <span class="token keyword">server</span> <span class="token punctuation">{</span>
+        <span class="token keyword">location</span> <span class="token operator">/</span>stat <span class="token punctuation">{</span>
+            rtmp_stat all<span class="token punctuation">;</span>
+            rtmp_stat_stylesheet stat<span class="token punctuation">.</span>xsl<span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+        <span class="token keyword">location</span> <span class="token operator">/</span>stat<span class="token punctuation">.</span>xsl <span class="token punctuation">{</span>
+            <span class="token keyword">root</span> <span class="token operator">/</span>path<span class="token operator">/</span>to<span class="token operator">/</span>stat<span class="token operator">/</span>xsl<span class="token operator">/</span>file<span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>访问<code>http://192.168.1.1:8765/stat</code>可以看到当前时间内的各个application 的概况。<br>也可以下载<code>http://192.168.1.1:8765/stat.xsl</code> 进行统计。<br>端口号根据nginx配置而定。<br><img src="/images/20161225.png" alt="statistic"></p>
+<h4 id="日志"><a href="#日志" class="headerlink" title="日志"></a>日志</h4><p>除了原生nginx 自带的<strong>error.log</strong> 和<strong>access.log</strong> 两个日志外，nginx-rtmp-module 模块还有一个<strong>rtmp-aceesss.log</strong> 日志。默认都是在nginx 的安装目录的 <code>/logs</code> 目录中。<br>查阅资料后发现，nginx 应该是可以自定日志的格式的。在配置文件中也可以定义错误日志的级别，有<br><strong>debug | info | notice | warn | error | crit</strong> 几个级别，大概排查问题都利用debug 级别的错误日志。</p>
+<h4 id="控制模块"><a href="#控制模块" class="headerlink" title="控制模块"></a>控制模块</h4><p>nginx-rtmp 服务器支持以http的形式从外部对rtmp 进行控制。需要配置以下项。</p>
+<pre class=" language-nginx"><code class="language-nginx"><span class="token keyword">http</span> <span class="token punctuation">{</span>
+……
+    <span class="token keyword">server</span> <span class="token punctuation">{</span>
+        <span class="token keyword">listen</span>       <span class="token number">8080</span><span class="token punctuation">;</span>
+        <span class="token keyword">server_name</span>  localhost<span class="token punctuation">;</span>
+        <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+        <span class="token keyword">location</span> <span class="token operator">/</span>control <span class="token punctuation">{</span>
+            rtmp_control all<span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+     <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>再在需要控制的<code>application</code>中预设好各种参数之后，便可以采用类似接口的形式对某些流进行录制，禁播，重定向之类的操作了。以下展示开始和停止录制的url。</p>
+<pre><code>curl &quot;http://localhost:8080/control/record/start?app=myapp&amp;name=mystream&amp;rec=rec1&quot;
+curl &quot;http://localhost:8080/control/record/stop?app=myapp&amp;name=mystream&amp;rec=rec1&quot; 
+</code></pre><p>具体的控制说明可以查看：<br><a href="https://github.com/arut/nginx-rtmp-module/wiki/Control-module" target="_blank" rel="noopener"><strong><em>control配置文档</em></strong></a></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>Nginx-rtmp 架构的流媒体服务器实际测试基本功能都有，性能也不错。在配置较差的VPS 上搭建也可以流畅运行，并不占用太多的资源。但是其只能实现简单的功能，实际对于业务以及运营需要改进的地方还有很多。<br>实测nginx-rtmp 服务器在hls 时，播放有时会有卡顿，原因未知；同码率推到其他流媒体服务器，hls 拉流没有卡顿，可能跟推流也有关系。</p>
+<h2 id="Q-amp-As"><a href="#Q-amp-As" class="headerlink" title="Q&amp;As"></a>Q&amp;As</h2><p>Q: mpeg dash？<br>A: 类似于apple家的HLS，MPEG-DASH 是基于HTTP的自适应串流方案中的唯一国际标准。也是有小切片和索引文件组成，SC计划在明年支持此协议。  </p>
+<p>Q: http callback？<br>A: 在nginx-rtmp 的官方wiki 中描述的http callback 大概意思为客户端发送连接请求时，会发送一个异步http 请求，会使处理暂停，直到返回状态码之后再根据状态码继续连接请求。具体可以查看：<br><strong><a href="https://github.com/arut/nginx-rtmp-module/wiki/Directives#notify" target="_blank" rel="noopener">https://github.com/arut/nginx-rtmp-module/wiki/Directives#notify</a> </strong> </p>
+<p>Q: 多域名配置？<br>A: 网上资料说nginx 本身是可以改写url 的，有可以配置多个域名；nginx-rtmp 服务器没有说明可以支持多域名的配置，目测在做一些修改之后是可以做到支持多域名的。  </p>
+<p>Q: 延迟？<br>A: nginx-rtmp 的拉流和推流，延迟在1s左右。在播放器缓冲设置在0时所测。  </p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/live/" rel="tag"># live</a>
+          
+            <a href="/tags/LINUX/" rel="tag"># LINUX</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/11/12/markdown_test/" rel="next" title="MarkDown_Test">
+                <i class="fa fa-chevron-left"></i> MarkDown_Test
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/01/03/Linux-Nginx-MariaDB-PHP/" rel="prev" title="Linux+Nginx+MariaDB+PHP_SERVER_BUILDING">
+                Linux+Nginx+MariaDB+PHP_SERVER_BUILDING <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMDE1My82NzA4"></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.png"
+                alt="汪~" />
+            
+              <p class="site-author-name" itemprop="name">汪~</p>
+              <p class="site-description motion-element" itemprop="description">农村进城务工人员</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">16</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:toneytonight@nuaa.edu.cn" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://twitter.com/Bobbie_IEEE" target="_blank" title="Twitter">
+                      
+                        <i class="fa fa-fw fa-twitter"></i>Twitter</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.douban.com/people/toneytonight" target="_blank" title="Douban">
+                      
+                        <i class="fa fa-fw fa-link"></i>Douban</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://weibo.com/xxxuIEEE" target="_blank" title="Weibo">
+                      
+                        <i class="fa fa-fw fa-weibo"></i>Weibo</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#简介"><span class="nav-number">1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#功能特点"><span class="nav-number">2.</span> <span class="nav-text">功能特点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装及配置"><span class="nav-number">3.</span> <span class="nav-text">安装及配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#安装部署"><span class="nav-number">3.1.</span> <span class="nav-text">安装部署</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#nginx-rtmp-module："><span class="nav-number">3.1.1.</span> <span class="nav-text">nginx-rtmp-module：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#nginx："><span class="nav-number">3.1.2.</span> <span class="nav-text">nginx：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#编译安装："><span class="nav-number">3.1.3.</span> <span class="nav-text">编译安装：</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置"><span class="nav-number">3.2.</span> <span class="nav-text">配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#直播基本配置："><span class="nav-number">3.3.</span> <span class="nav-text">直播基本配置：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#rtmp推拉流"><span class="nav-number">3.3.1.</span> <span class="nav-text">rtmp推拉流</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#hls"><span class="nav-number">3.3.2.</span> <span class="nav-text">hls</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#MPEG-DASH"><span class="nav-number">3.3.3.</span> <span class="nav-text">MPEG-DASH</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#自动转推"><span class="nav-number">3.3.4.</span> <span class="nav-text">自动转推</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#录制"><span class="nav-number">3.3.5.</span> <span class="nav-text">录制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#转码"><span class="nav-number">3.3.6.</span> <span class="nav-text">转码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#exec"><span class="nav-number">3.3.7.</span> <span class="nav-text">exec</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#统计信息"><span class="nav-number">3.3.8.</span> <span class="nav-text">统计信息</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#日志"><span class="nav-number">3.3.9.</span> <span class="nav-text">日志</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#控制模块"><span class="nav-number">3.3.10.</span> <span class="nav-text">控制模块</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Q-amp-As"><span class="nav-number">5.</span> <span class="nav-text">Q&amp;As</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2016 &mdash; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">汪~</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a></div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.3"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.3"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

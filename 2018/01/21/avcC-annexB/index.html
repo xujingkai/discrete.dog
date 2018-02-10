@@ -1,0 +1,1537 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicons/apple-touch-icon.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicons/favicon-32x32.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicons/favicon-16x16.png?v=5.1.3">
+
+
+  <link rel="mask-icon" href="/images/favicons/safari-pinned-tab.svg?v=5.1.3" color="#222">
+
+
+  <link rel="manifest" href="/images/favicons/manifest.json">
+
+
+  <meta name="msapplication-config" content="/images/favicons/browserconfig.xml" />
+
+
+
+  <meta name="keywords" content="live,video_codec," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="近期竞答直播火热，简直百花齐放，各大直播解决方案提供商为了快速抢占份额，提出各种降低延迟，同步答题卡与直播画面的方案。 其中，同步答题卡与直播画面的方案中，比较普遍的做法是在H264码流的SEI中增加相应的自定义信息，使得播放器在解码到对应的信息的时候弹出预先几秒下发的答题卡，并开始倒计时。 在这里，涉及到播放器解码H264码流的方式，播放器使用不同的解码方式可能导致SEI解析失败，甚至画面无法正">
+<meta name="keywords" content="live,video_codec">
+<meta property="og:type" content="article">
+<meta property="og:title" content="H264码流中的avcC和Annex-B">
+<meta property="og:url" content="https://discrete.dog/2018/01/21/avcC-annexB/index.html">
+<meta property="og:site_name" content="离散汪">
+<meta property="og:description" content="近期竞答直播火热，简直百花齐放，各大直播解决方案提供商为了快速抢占份额，提出各种降低延迟，同步答题卡与直播画面的方案。 其中，同步答题卡与直播画面的方案中，比较普遍的做法是在H264码流的SEI中增加相应的自定义信息，使得播放器在解码到对应的信息的时候弹出预先几秒下发的答题卡，并开始倒计时。 在这里，涉及到播放器解码H264码流的方式，播放器使用不同的解码方式可能导致SEI解析失败，甚至画面无法正">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="https://discrete.dog/images/20180121001.png">
+<meta property="og:image" content="https://discrete.dog/images/20180121002.png">
+<meta property="og:image" content="https://discrete.dog/images/20180121003.png">
+<meta property="og:image" content="https://discrete.dog/images/20180121006.png">
+<meta property="og:image" content="https://discrete.dog/images/20180121007.png">
+<meta property="og:image" content="https://discrete.dog/images/20180125001.png">
+<meta property="og:image" content="https://discrete.dog/images/20180125002.png">
+<meta property="og:updated_time" content="2018-02-04T12:29:40.303Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="H264码流中的avcC和Annex-B">
+<meta name="twitter:description" content="近期竞答直播火热，简直百花齐放，各大直播解决方案提供商为了快速抢占份额，提出各种降低延迟，同步答题卡与直播画面的方案。 其中，同步答题卡与直播画面的方案中，比较普遍的做法是在H264码流的SEI中增加相应的自定义信息，使得播放器在解码到对应的信息的时候弹出预先几秒下发的答题卡，并开始倒计时。 在这里，涉及到播放器解码H264码流的方式，播放器使用不同的解码方式可能导致SEI解析失败，甚至画面无法正">
+<meta name="twitter:image" content="https://discrete.dog/images/20180121001.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.3',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":true,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://discrete.dog/2018/01/21/avcC-annexB/"/>
+
+
+
+
+
+  <title>H264码流中的avcC和Annex-B | 离散汪</title>
+  
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/css/prism-atom-dark.css" type="text/css"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">离散汪</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="https://about.me/xujingkai" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-books">
+          <a href="/books" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-book"></i> <br />
+            
+            Books
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            Search
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="Searching..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://discrete.dog/2018/01/21/avcC-annexB/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="汪~">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="离散汪">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">H264码流中的avcC和Annex-B</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-01-21T20:18:55+08:00">
+                2018-01-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-eye"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <script src="\assets\js\APlayer.min.js"> </script><p>近期竞答直播火热，简直百花齐放，各大直播解决方案提供商为了快速抢占份额，提出各种降低延迟，同步答题卡与直播画面的方案。</p>
+<p>其中，同步答题卡与直播画面的方案中，比较普遍的做法是在H264码流的SEI中增加相应的自定义信息，使得播放器在解码到对应的信息的时候弹出预先几秒下发的答题卡，并开始倒计时。</p>
+<p>在这里，涉及到播放器解码H264码流的方式，播放器使用不同的解码方式可能导致SEI解析失败，甚至画面无法正常播放。</p>
+<a id="more"></a>
+<h1 id="SEI是什么呢？"><a href="#SEI是什么呢？" class="headerlink" title="SEI是什么呢？"></a>SEI是什么呢？</h1><p>SEI是NALU type为6的NALU，全称为Supplemental enhancement<br>information，直译为补充增强信息，一般称为增强帧。此处涉及到比较基础的编码打包方面的知识，笔者也不太清楚，后续查阅资料搞明白之后与大家分享。今天先理下H264打包码流的两种格式：avcc与annex-B。</p>
+<h1 id="H264编码结构"><a href="#H264编码结构" class="headerlink" title="H264编码结构"></a>H264编码结构</h1><p>要说H264的打包方式，首先要讲下H264的编码结构。</p>
+<p>H264主要分为两层：编码层(Video Coding Layer，VCL)和网络抽象层(NetworkAbstraction Layer (NAL))；前者定义了各种编码的算法，后者将前者编码的数据按照一定的方式进行打包存储或者传输。</p>
+<p>而NAL单元(NALU)作为可以单独可以解码的结构，整个H264的码流可以理解为由多个NALU组成的。</p>
+<p><img src="/images/20180121001.png" alt="NAL"></p>
+<p>而NALU由头部和负荷组成。</p>
+<p><img src="/images/20180121002.png" alt="NALU"></p>
+<p>NALU的负荷由称为原始字节序列载荷(Raw Byte Sequence Payload,RBSP)，是由一串数据比特串(String Of Data Bits,SODB)加上末尾的stop-bits（使得整个NALU长度是8的倍数）组成。</p>
+<p><img src="/images/20180121003.png" alt="RBSP"></p>
+<p>另外，关于RBSP还有一个概念叫(Encapsulation Byte Sequence Packets,RBSP，不清楚要怎么翻译)。这个EBSP是在RBSP的基础上，为了防止编码出来的比特流中有跟分隔NALU的StartCodePrefix(<code>0x00000001</code>)有冲突，导致分隔NALU失败。所以在连续出现两个字节为0时，强制插入一个<code>0x03</code>字节。在解码时，再讲<code>0x03</code>字节删除，还原回去。称为脱壳操作（有中文资料这么称呼，不清楚有没有这么个叫法）。</p>
+<p>看到有大神用数学公式概括了以上几个概念的关系。此处start_code为annex-b格式中的分隔符，可能是三字节的0x000001或者四字节的0x00000001，实际来看后者较多，可以认为是下图一个小缺陷。</p>
+<p><img src="/images/20180121006.png" alt="SODB-RBSP-NALU-bitstream"></p>
+<p><img src="/images/20180121007.png" alt="SODB-RBSP-NALU-bitstream"></p>
+<p>NALU头部一个字节表明该NALU的类型，标准定义列表如下：</p>
+<table>
+<thead>
+<tr>
+<th><strong>nal_unit_type</strong></th>
+<th><strong>Content of NAL unit &amp;RBSP syntax structure</strong></th>
+<th><strong>C</strong></th>
+<th>NAL unit type class<br>[Annex A]</th>
+<th>NAL unit type class<br>[Annex G &amp; H]</th>
+<th>NAL unittype class<br>[Annex I]</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>Unspecified</td>
+<td></td>
+<td>non-VCL</td>
+<td>non-VCL</td>
+<td>non-VCL</td>
+</tr>
+<tr>
+<td>1</td>
+<td>Coded slice of a non-IDR picture<br><em>slice_layer_without_partitioning_rbsp( )</em></td>
+<td>2, 3, 4</td>
+<td>VCL</td>
+<td>VCL</td>
+<td>VCL</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Coded slice data partition A<br><em>slice_data_partition_a_layer_rbsp( )</em></td>
+<td>2</td>
+<td>VCL</td>
+<td>not applicable</td>
+<td>not applicable</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Coded slice data partition B<br><em>slice_data_partition_b_layer_rbsp( )</em></td>
+<td>3</td>
+<td>VCL</td>
+<td>not applicable</td>
+<td>not applicable</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Coded slice data partition C<br><em>slice_data_partition_c_layer_rbsp( )</em></td>
+<td>4</td>
+<td>VCL</td>
+<td>not applicable</td>
+<td>not applicable</td>
+</tr>
+<tr>
+<td>5</td>
+<td><font color="#FF0000">Coded slice of an IDR picture<br><em>slice_layer_without_partitioning_rbsp( )</em></font></td>
+<td>2, 3</td>
+<td>VCL</td>
+<td>VCL</td>
+<td>VCL</td>
+</tr>
+<tr>
+<td>6</td>
+<td><font color="#FF0000">Supplemental enhancement information<br><em>(SEI)sei_rbsp( )</em></font></td>
+<td>5</td>
+<td>non-VCL</td>
+<td>non-VCL</td>
+<td>non-VCL</td>
+</tr>
+<tr>
+<td>7</td>
+<td><font color="#FF0000">Sequence parameter set<br><em>seq_parameter_set_rbsp( )</em></font></td>
+<td>0</td>
+<td>non-VCL</td>
+<td>non-VCL</td>
+<td>non-VCL</td>
+</tr>
+<tr>
+<td>8</td>
+<td><font color="#FF0000">Picture parameter set<br><em>pic_parameter_set_rbsp( )</em></font></td>
+<td>1</td>
+<td>non-VCL</td>
+<td>non-VCL</td>
+<td>non-VCL</td>
+</tr>
+<tr>
+<td>9</td>
+<td>Access unit delimiter<br><em>access_unit_delimiter_rbsp( )</em></td>
+<td>6</td>
+<td>non-VCL</td>
+<td>non-VCL</td>
+<td>non-VCL</td>
+</tr>
+<tr>
+<td>10</td>
+<td><font color="#FF0000">End of sequence<br><em>end_of_seq_rbsp( )</em></font></td>
+<td>7</td>
+<td>non-VCL</td>
+<td>non-VCL</td>
+<td>non-VCL</td>
+</tr>
+<tr>
+<td>11</td>
+<td><font color="#FF0000">End of stream<br><em>end_of_stream_rbsp( )</em></font></td>
+<td>8</td>
+<td>non-VCL</td>
+<td>non-VCL</td>
+<td>non-VCL</td>
+</tr>
+<tr>
+<td>12</td>
+<td>Filler data<br><em>filler_data_rbsp( )</em></td>
+<td>9</td>
+<td>non-VCL</td>
+<td>non-VCL</td>
+<td>non-VCL</td>
+</tr>
+<tr>
+<td>13</td>
+<td>Sequence parameter set extension<br><em>seq_parameter_set_extension_rbsp( )</em></td>
+<td>10</td>
+<td>non-VCL</td>
+<td>non-VCL</td>
+<td>non-VCL</td>
+</tr>
+<tr>
+<td>14</td>
+<td>Prefix NAL unit<br><em>prefix_nal_unit_rbsp( )</em></td>
+<td>2</td>
+<td>non-VCL</td>
+<td>suffix dependent</td>
+<td>suffix dependent</td>
+</tr>
+<tr>
+<td>15</td>
+<td>Subset sequence parameter set<br><em>subset_seq_parameter_set_rbsp( )</em></td>
+<td>0</td>
+<td>non-VCL</td>
+<td>non-VCL</td>
+<td>non-VCL</td>
+</tr>
+<tr>
+<td>16</td>
+<td>Depth parameter set<br><em>depth_parameter_set_rbsp( )</em></td>
+<td>11</td>
+<td>non-VCL</td>
+<td>non-VCL</td>
+<td>non-VCL</td>
+</tr>
+<tr>
+<td>17 – 18</td>
+<td>Reserved</td>
+<td></td>
+<td>non-VCL</td>
+<td>non-VCL</td>
+<td>non-VCL</td>
+</tr>
+<tr>
+<td>19</td>
+<td>Coded slice of an auxiliary coded picture without partitioning<br><em>slice_layer_without_partitioning_rbsp( )</em></td>
+<td>2, 3, 4</td>
+<td>non-VCL</td>
+<td>non-VCL</td>
+<td>non-VCL</td>
+</tr>
+<tr>
+<td>20</td>
+<td>Coded slice extension<br><em>slice_layer_extension_rbsp( )</em></td>
+<td>2, 3, 4</td>
+<td>non-VCL</td>
+<td>VCL</td>
+<td>VCL</td>
+</tr>
+<tr>
+<td>21</td>
+<td>Coded slice extension for depth view<br><em>component or a 3D-AVC texture view component slice_layer_extension_rbsp( )</em></td>
+<td>2, 3, 4</td>
+<td>non-VCL</td>
+<td>non-VCL</td>
+<td>VCL</td>
+</tr>
+<tr>
+<td>22 – 23</td>
+<td>Reserved</td>
+<td></td>
+<td>non-VCL</td>
+<td>non-VCL</td>
+<td>VCL</td>
+</tr>
+<tr>
+<td>24 – 31</td>
+<td>Unspecified</td>
+<td></td>
+<td>non-VCL</td>
+<td>non-VCL</td>
+<td>non-VCL</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<p>基础知识讲得差不多了，下面进入正题，看下什么是avcc和annex打包方式呢。</p>
+<p>以上已经提过，H264的码流有多个NALU组成，那边NALU是如何组成AVCC的呢，每个NALU又该如何去分隔呢，此处便涉及到了AVCC和annex-B两种格式。</p>
+<h1 id="avcC"><a href="#avcC" class="headerlink" title="avcC"></a>avcC</h1><p>avcC的码流打包方式是在每个NALU前面添加一个标记NALU长度的字段，该字段可能的长度为1字节或者2字节或者4字节，通常为了保证该字段可以足够描述NALU的长度，会设置为4个字节。</p>
+<p>而该字节的长度可以通过解析extradata（也称为sequence header）的头信息来获取，也就是常说的avc头。以下为该头部信息的解析格式：</p>
+<pre class=" language-c"><code class="language-c"><span class="token function">aligned</span><span class="token punctuation">(</span><span class="token number">8</span><span class="token punctuation">)</span> class AVCDecoderConfigurationRecord <span class="token punctuation">{</span>
+    <span class="token keyword">unsigned</span> <span class="token keyword">int</span><span class="token punctuation">(</span><span class="token number">8</span><span class="token punctuation">)</span> configurationVersion <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+    <span class="token keyword">unsigned</span> <span class="token keyword">int</span><span class="token punctuation">(</span><span class="token number">8</span><span class="token punctuation">)</span> AVCProfileIndication<span class="token punctuation">;</span>
+    <span class="token keyword">unsigned</span> <span class="token keyword">int</span><span class="token punctuation">(</span><span class="token number">8</span><span class="token punctuation">)</span> profile_compatibility<span class="token punctuation">;</span>
+    <span class="token keyword">unsigned</span> <span class="token keyword">int</span><span class="token punctuation">(</span><span class="token number">8</span><span class="token punctuation">)</span> AVCLevelIndication<span class="token punctuation">;</span> 
+    <span class="token function">bit</span><span class="token punctuation">(</span><span class="token number">6</span><span class="token punctuation">)</span> reserved <span class="token operator">=</span> ‘<span class="token number">111111</span>’b<span class="token punctuation">;</span>
+    <span class="token keyword">unsigned</span> <span class="token keyword">int</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span> lengthSizeMinusOne<span class="token punctuation">;</span> 
+    <span class="token function">bit</span><span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">)</span> reserved <span class="token operator">=</span> ‘<span class="token number">111</span>’b<span class="token punctuation">;</span>
+    <span class="token keyword">unsigned</span> <span class="token keyword">int</span><span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">)</span> numOfSequenceParameterSets<span class="token punctuation">;</span>
+    <span class="token keyword">for</span> <span class="token punctuation">(</span>i<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">;</span> i<span class="token operator">&lt;</span> numOfSequenceParameterSets<span class="token punctuation">;</span>  i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">unsigned</span> <span class="token keyword">int</span><span class="token punctuation">(</span><span class="token number">16</span><span class="token punctuation">)</span> sequenceParameterSetLength <span class="token punctuation">;</span>
+        <span class="token function">bit</span><span class="token punctuation">(</span><span class="token number">8</span><span class="token operator">*</span>sequenceParameterSetLength<span class="token punctuation">)</span> sequenceParameterSetNALUnit<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">unsigned</span> <span class="token keyword">int</span><span class="token punctuation">(</span><span class="token number">8</span><span class="token punctuation">)</span> numOfPictureParameterSets<span class="token punctuation">;</span>
+    <span class="token keyword">for</span> <span class="token punctuation">(</span>i<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">;</span> i<span class="token operator">&lt;</span> numOfPictureParameterSets<span class="token punctuation">;</span>  i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">unsigned</span> <span class="token keyword">int</span><span class="token punctuation">(</span><span class="token number">16</span><span class="token punctuation">)</span> pictureParameterSetLength<span class="token punctuation">;</span>
+        <span class="token function">bit</span><span class="token punctuation">(</span><span class="token number">8</span><span class="token operator">*</span>pictureParameterSetLength<span class="token punctuation">)</span> pictureParameterSetNALUnit<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">if</span><span class="token punctuation">(</span> profile_idc  <span class="token operator">==</span>  <span class="token number">100</span>  <span class="token operator">||</span>  profile_idc  <span class="token operator">==</span>  <span class="token number">110</span>  <span class="token operator">||</span>
+        profile_idc  <span class="token operator">==</span>  <span class="token number">122</span>  <span class="token operator">||</span>  profile_idc  <span class="token operator">==</span>  <span class="token number">144</span> <span class="token punctuation">)</span>
+    <span class="token punctuation">{</span>
+        <span class="token function">bit</span><span class="token punctuation">(</span><span class="token number">6</span><span class="token punctuation">)</span> reserved <span class="token operator">=</span> ‘<span class="token number">111111</span>’b<span class="token punctuation">;</span>
+        <span class="token keyword">unsigned</span> <span class="token keyword">int</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span> chroma_format<span class="token punctuation">;</span>
+        <span class="token function">bit</span><span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">)</span> reserved <span class="token operator">=</span> ‘<span class="token number">11111</span>’b<span class="token punctuation">;</span>
+        <span class="token keyword">unsigned</span> <span class="token keyword">int</span><span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">)</span> bit_depth_luma_minus8<span class="token punctuation">;</span>
+        <span class="token function">bit</span><span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">)</span> reserved <span class="token operator">=</span> ‘<span class="token number">11111</span>’b<span class="token punctuation">;</span>
+        <span class="token keyword">unsigned</span> <span class="token keyword">int</span><span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">)</span> bit_depth_chroma_minus8<span class="token punctuation">;</span>
+        <span class="token keyword">unsigned</span> <span class="token keyword">int</span><span class="token punctuation">(</span><span class="token number">8</span><span class="token punctuation">)</span> numOfSequenceParameterSetExt<span class="token punctuation">;</span>
+        <span class="token keyword">for</span> <span class="token punctuation">(</span>i<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">;</span> i<span class="token operator">&lt;</span> numOfSequenceParameterSetExt<span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token keyword">unsigned</span> <span class="token keyword">int</span><span class="token punctuation">(</span><span class="token number">16</span><span class="token punctuation">)</span> sequenceParameterSetExtLength<span class="token punctuation">;</span>
+            <span class="token function">bit</span><span class="token punctuation">(</span><span class="token number">8</span><span class="token operator">*</span>sequenceParameterSetExtLength<span class="token punctuation">)</span> sequenceParameterSetExtNALUnit<span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>其中第五个字节的最后两位<code>unsigned int(2) lengthSizeMinusOne;</code>便是上述标记NALU长度的字段的长度。</p>
+<p>在extrdata中还包含了SPS的个数，SPS的长度和SPS，以及PPS的个数，PPS的长度和PPS。对于解码器来说，上述参数都十分重要。</p>
+<h1 id="Annex-B"><a href="#Annex-B" class="headerlink" title="Annex-B"></a>Annex-B</h1><p>Annex-B是指H264的标准文档中的附录B中给的H264码流打包方式。相对于avcC来说，Annex-B打包方式没有固定长度的字段来表明NALU的长度，而是使用固定字符串来作为不同NALU的分隔符，有<code>0x000001</code>和<code>0x00000001</code>，也就是前文提到RBSP时提到过的<code>START CODES</code>。为了为了防止NALU中本身带有<code>0x000001</code>或者<code>0x00000001</code>而导致的解析分隔失败，引入了<code>0x03</code>的防止竞争字节。这种防止竞争操作同样适用与avcC格式。</p>
+<p>Annex-B格式中的SPS和PPS也以NALU的方式放在码流的首部，不像avcC需要将SPS和PPS格式化在extrdata中。</p>
+<p><strong>后续贴几张十六进制的图</strong></p>
+<h1 id="新增flv实例分析2018年1月25日"><a href="#新增flv实例分析2018年1月25日" class="headerlink" title="新增flv实例分析2018年1月25日"></a>新增flv实例分析2018年1月25日</h1><h2 id="AVCsequenceheader"><a href="#AVCsequenceheader" class="headerlink" title="AVCsequenceheader"></a>AVCsequenceheader</h2><p><img src="/images/20180125001.png" alt="SODB-RBSP-NALU-bitstream"></p>
+<ol>
+<li>00 00 09 <ol>
+<li>onMetadata结束位</li>
+</ol>
+</li>
+<li>00 00 02 F8<ol>
+<li>previousTagSize</li>
+<li>000002F8H=760D，代表前tag长度为760字节</li>
+</ol>
+</li>
+<li>09<ol>
+<li>TagType</li>
+<li>09H=09D，代表video（12H=18D，script；08H=08D，audio）</li>
+</ol>
+</li>
+<li>00 00 2D<ol>
+<li>DataSize</li>
+<li>00002DH=45D，代表实际的TagSize长度为45个字节</li>
+</ol>
+</li>
+<li>00 00 00 <ol>
+<li>时间戳，单位毫秒</li>
+<li>AVC头时间戳为0</li>
+</ol>
+</li>
+<li>00<ol>
+<li>扩展时间戳，单位毫秒，作为基本时间戳的补位，补在基本时间戳的高位</li>
+<li>AVC头扩展时间戳为0</li>
+</ol>
+</li>
+<li>00 00 00<ol>
+<li>StreamId，默认为0，作用不明</li>
+</ol>
+</li>
+<li>17<ol>
+<li>前四位为FrameType，此处为1，代表关键帧<ol>
+<li>1: keyframe (for AVC, a       seekableframe)</li>
+<li>2: inter frame(for AVC, a non       -seekable frame)</li>
+<li>3 : disposable inter       frame(H.263only)</li>
+<li>4 : generated       keyframe(reserved forserver use only)</li>
+<li>5 : video info / command frame</li>
+</ol>
+</li>
+<li>后四位为CodecID，此处为7，代表AVC编码<ol>
+<li>1: JPEG (currently unused)</li>
+<li>2: Sorenson H.263</li>
+<li>3 : Screen video</li>
+<li>4 : On2 VP6</li>
+<li>5 : On2 VP6 with alpha channel</li>
+<li>6 : Screen video version 2</li>
+<li>7 : AVC</li>
+</ol>
+</li>
+</ol>
+</li>
+<li>由于上述的CodecID为7，所以下面为AVCVIDEOPACKET</li>
+<li>00<ol>
+<li>AVCPacketType，此处为0，代表AVCsequenceheader<ol>
+<li>0–AVC sequence header</li>
+</ol>
+</li>
+<li>1–AVC NALU</li>
+<li>2–AVC end of sequence</li>
+</ol>
+</li>
+<li>00 00 00<ol>
+<li>由于此处是AVCVIDEOPACKET内容，解析为CompositionTime      Offset，含义不明</li>
+</ol>
+</li>
+<li>接下来一串到下一个tag之前的PreviousTagSize都是AVC的内容，AVCDecoderConfigurationRecord。根据14496-15标准解析。</li>
+<li>00 00 00 38<ol>
+<li>这个tag的大小。38H=56D，代表这个tag长度为56字节。</li>
+</ol>
+</li>
+</ol>
+<h2 id="NAL-units"><a href="#NAL-units" class="headerlink" title="NAL units"></a>NAL units</h2><p><img src="/images/20180125002.png" alt="SODB-RBSP-NALU-bitstream"></p>
+<ol>
+<li>27<ol>
+<li>AVC的非inter frame</li>
+</ol>
+</li>
+<li>01<ol>
+<li>AVC NALU数据</li>
+</ol>
+</li>
+<li>00 00 00<ol>
+<li>由于此处是AVCVIDEOPACKET内容，解析为CompositionTime      Offset，含义不明</li>
+</ol>
+</li>
+<li>00 00 00 09<ol>
+<li>下一个NALU的长度为9字节</li>
+</ol>
+</li>
+<li>06<ol>
+<li>NALU header为6，代表为NALU type为SEI</li>
+</ol>
+</li>
+<li>00 00 0F 61 1B 9B D9 39<ol>
+<li>NAL中的实际内容，此项为SEI的内容。</li>
+</ol>
+</li>
+<li>00 00 02 23<ol>
+<li>下一个NALU的长度为223H=563D字节</li>
+</ol>
+</li>
+<li>41 9A … 7E E0<ol>
+<li>NALU的内容</li>
+<li>其中第一个字节为nal header，包含以下三个内容<ol>
+<li>forbidden_zero_bit</li>
+<li>nal_ref_idc</li>
+<li>nal_unit_type</li>
+</ol>
+</li>
+<li>此处41H=‭01 00 00 01‬B，<ol>
+<li>首位是0，符合要求，语法无错误</li>
+<li>第二位到第三位是10，代表优先级是2</li>
+<li>第四位到第八位为00001B=1D，表示该nal_unit_header=1，代表非IDR不可分区的slice</li>
+</ol>
+</li>
+</ol>
+</li>
+<li>00 00 02 54<ol>
+<li>代表前面flv tag size是254H=596D字节。</li>
+</ol>
+</li>
+</ol>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/live/" rel="tag"># live</a>
+          
+            <a href="/tags/video-codec/" rel="tag"># video_codec</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/01/01/ffmpeg-test-stream/" rel="next" title="FFmpeg测试序列">
+                <i class="fa fa-chevron-left"></i> FFmpeg测试序列
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/02/04/H265_format/" rel="prev" title="H265码流格式">
+                H265码流格式 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMDE1My82NzA4"></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.png"
+                alt="汪~" />
+            
+              <p class="site-author-name" itemprop="name">汪~</p>
+              <p class="site-description motion-element" itemprop="description">农村进城务工人员</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">16</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:toneytonight@nuaa.edu.cn" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://twitter.com/Bobbie_IEEE" target="_blank" title="Twitter">
+                      
+                        <i class="fa fa-fw fa-twitter"></i>Twitter</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.douban.com/people/toneytonight" target="_blank" title="Douban">
+                      
+                        <i class="fa fa-fw fa-link"></i>Douban</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://weibo.com/xxxuIEEE" target="_blank" title="Weibo">
+                      
+                        <i class="fa fa-fw fa-weibo"></i>Weibo</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#SEI是什么呢？"><span class="nav-number">1.</span> <span class="nav-text">SEI是什么呢？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#H264编码结构"><span class="nav-number">2.</span> <span class="nav-text">H264编码结构</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#avcC"><span class="nav-number">3.</span> <span class="nav-text">avcC</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Annex-B"><span class="nav-number">4.</span> <span class="nav-text">Annex-B</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#新增flv实例分析2018年1月25日"><span class="nav-number">5.</span> <span class="nav-text">新增flv实例分析2018年1月25日</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#AVCsequenceheader"><span class="nav-number">5.1.</span> <span class="nav-text">AVCsequenceheader</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#NAL-units"><span class="nav-number">5.2.</span> <span class="nav-text">NAL units</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2016 &mdash; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">汪~</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a></div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.3"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.3"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

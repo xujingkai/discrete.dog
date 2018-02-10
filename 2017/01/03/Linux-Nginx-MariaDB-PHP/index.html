@@ -1,0 +1,1294 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicons/apple-touch-icon.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicons/favicon-32x32.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicons/favicon-16x16.png?v=5.1.3">
+
+
+  <link rel="mask-icon" href="/images/favicons/safari-pinned-tab.svg?v=5.1.3" color="#222">
+
+
+  <link rel="manifest" href="/images/favicons/manifest.json">
+
+
+  <meta name="msapplication-config" content="/images/favicons/browserconfig.xml" />
+
+
+
+  <meta name="keywords" content="LINUX," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Linux+Nginx+MariaDB+PHP,LNMP架构的动态网站服务器是比较流行的web服务器整体结构方案，由前几年比较流行的LAMP（Linux+Apache+Mysql+PHP）发展而来。其中将Apache替换成对硬件要求更低，并发数更高并且开源的Nginx；将被Oracle收购了的Mysql换成了完全兼容Mysql的MariaDB；其他不变。">
+<meta name="keywords" content="LINUX">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux+Nginx+MariaDB+PHP_SERVER_BUILDING">
+<meta property="og:url" content="https://discrete.dog/2017/01/03/Linux-Nginx-MariaDB-PHP/index.html">
+<meta property="og:site_name" content="离散汪">
+<meta property="og:description" content="Linux+Nginx+MariaDB+PHP,LNMP架构的动态网站服务器是比较流行的web服务器整体结构方案，由前几年比较流行的LAMP（Linux+Apache+Mysql+PHP）发展而来。其中将Apache替换成对硬件要求更低，并发数更高并且开源的Nginx；将被Oracle收购了的Mysql换成了完全兼容Mysql的MariaDB；其他不变。">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="https://discrete.dog/images/20170103_2.png">
+<meta property="og:image" content="https://discrete.dog/images/20170103.png">
+<meta property="og:updated_time" content="2017-11-21T12:43:45.203Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Linux+Nginx+MariaDB+PHP_SERVER_BUILDING">
+<meta name="twitter:description" content="Linux+Nginx+MariaDB+PHP,LNMP架构的动态网站服务器是比较流行的web服务器整体结构方案，由前几年比较流行的LAMP（Linux+Apache+Mysql+PHP）发展而来。其中将Apache替换成对硬件要求更低，并发数更高并且开源的Nginx；将被Oracle收购了的Mysql换成了完全兼容Mysql的MariaDB；其他不变。">
+<meta name="twitter:image" content="https://discrete.dog/images/20170103_2.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.3',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":true,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://discrete.dog/2017/01/03/Linux-Nginx-MariaDB-PHP/"/>
+
+
+
+
+
+  <title>Linux+Nginx+MariaDB+PHP_SERVER_BUILDING | 离散汪</title>
+  
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/css/prism-atom-dark.css" type="text/css"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">离散汪</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="https://about.me/xujingkai" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-books">
+          <a href="/books" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-book"></i> <br />
+            
+            Books
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            Search
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="Searching..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://discrete.dog/2017/01/03/Linux-Nginx-MariaDB-PHP/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="汪~">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="离散汪">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Linux+Nginx+MariaDB+PHP_SERVER_BUILDING</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-03T20:45:04+08:00">
+                2017-01-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-eye"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <script src="\assets\js\APlayer.min.js"> </script><p>Linux+Nginx+MariaDB+PHP,LNMP架构的动态网站服务器是比较流行的web服务器整体结构方案，由前几年比较流行的LAMP（Linux+Apache+Mysql+PHP）发展而来。其中将Apache替换成对硬件要求更低，并发数更高并且开源的Nginx；将被Oracle收购了的Mysql换成了完全兼容Mysql的MariaDB；其他不变。<br><a id="more"></a><br>本次突发奇想决定玩一下PHP，所以在VPS上搭了个LNMP环境。</p>
+<h1 id="Linux"><a href="#Linux" class="headerlink" title="Linux"></a>Linux</h1><p>选择VPS提供商镜像。KVM架构的VPS也可以自行安装各大Linux发行版。<br>此处安装的是</p>
+<pre class=" language-bash"><code class="language-bash"><span class="token comment" spellcheck="true"># cat /etc/redhat-release </span>
+CentOS release 6.6 <span class="token punctuation">(</span>Final<span class="token punctuation">)</span>
+</code></pre>
+<pre class=" language-bash"><code class="language-bash"><span class="token comment" spellcheck="true"># uname -a  </span>
+Linux LA 2.6.32-042stab113.21 <span class="token comment" spellcheck="true">#1 SMP Wed Mar 23 11:05:25 MSK 2016 i686 i686 i386 GNU/Linux</span>
+</code></pre>
+<h1 id="Nginx"><a href="#Nginx" class="headerlink" title="Nginx"></a>Nginx</h1><p>VPS提供的镜像的yum源的各个软件版本都较低，为了安装更新版的nginx，此处选择自行编译源码安装nginx。<br>此处nginx安装参考<a href="http://www.cnblogs.com/freeweb/p/5341926.html" target="_blank" rel="noopener"><strong><em>这篇博客</em></strong></a></p>
+<p>需要首先安装<code>gcc</code>、<code>gcc-c++</code>、<code>openssl</code>此处选择简单的yum安装</p>
+<pre class=" language-bash"><code class="language-bash">yum <span class="token function">install</span> -y gcc gcc-c++ openssl
+</code></pre>
+<p>下载nginx源码和其所需的PCRE库与zlib库源码</p>
+<pre class=" language-bash"><code class="language-bash"><span class="token function">mkdir</span> nginx
+<span class="token function">cd</span> nginx
+<span class="token function">wget</span> http://nginx.org/download/nginx-1.8.1.tar.gz
+<span class="token function">wget</span> ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/pcre-8.38.tar.gz
+<span class="token function">wget</span> https://ncu.dl.sourceforge.net/project/libpng/zlib/1.2.8/zlib-1.2.8.tar.gz
+<span class="token function">tar</span> zxvf nginx-1.8.1.tar.gz
+<span class="token function">tar</span> zxvf pcre-8.38.tar.gz
+<span class="token function">tar</span> zxvf zlib-1.2.8.tar.gz
+</code></pre>
+<p>编译安装nginx</p>
+<pre class=" language-bash"><code class="language-bash"><span class="token function">cd</span> nginx-1.8.1
+./configure --prefix<span class="token operator">=</span>/usr/local/nginx --sbin-path<span class="token operator">=</span>/usr/local/nginx/nginx --conf-path<span class="token operator">=</span>/usr/local/nginx/nginx.conf --pid-path<span class="token operator">=</span>/usr/local/nginx/nginx.pid --with-http_ssl_module --with-pcre<span class="token operator">=</span><span class="token punctuation">..</span>/pcre-8.38 --with-zlib<span class="token operator">=</span><span class="token punctuation">..</span>/zlib-1.2.8
+<span class="token function">make</span>
+<span class="token function">make</span> <span class="token function">install</span>
+</code></pre>
+<p>安装目录以及其他配置等目录可以自定义。<br><code>--with-pcre=</code>和<code>--with-zlib=</code>源码路径根据实际填写。<br>直接启动<code>/usr/local/nginx/nginx</code>即可。</p>
+<pre class=" language-bash"><code class="language-bash">curl http://localhost
+<span class="token operator">&lt;</span><span class="token operator">!</span>DOCTYPE html<span class="token operator">></span>
+<span class="token operator">&lt;</span>html<span class="token operator">></span>
+<span class="token operator">&lt;</span>head<span class="token operator">></span>
+<span class="token operator">&lt;</span>title<span class="token operator">></span>Welcome to nginx<span class="token operator">!</span><span class="token operator">&lt;</span>/title<span class="token operator">></span>
+<span class="token punctuation">..</span>.
+<span class="token punctuation">..</span>.
+</code></pre>
+<p><img src="/images/20170103_2.png" alt="nginx"><br>表示安装成功。如果未成功，请查看80端口是否占用，或者使用其他端口。<br><code>/usr/local/nginx/nginx</code>有一下几个参数选择，可自行研究。</p>
+<pre class=" language-bash"><code class="language-bash">Options:
+  -?,-h         <span class="token keyword">:</span> this <span class="token function">help</span>    
+  -v            <span class="token keyword">:</span> show version and <span class="token keyword">exit</span>   
+  -V            <span class="token keyword">:</span> show version and configure options <span class="token keyword">then</span> <span class="token keyword">exit</span>
+  -t            <span class="token keyword">:</span> <span class="token function">test</span> configuration and <span class="token keyword">exit</span>
+  -q            <span class="token keyword">:</span> suppress non-error messages during configuration testing
+  -s signal     <span class="token keyword">:</span> send signal to a master process: stop, quit, reopen, reload
+  -p prefix     <span class="token keyword">:</span> <span class="token keyword">set</span> prefix path <span class="token punctuation">(</span>default: /usr/local/nginx/<span class="token punctuation">)</span>
+  -c filename   <span class="token keyword">:</span> <span class="token keyword">set</span> configuration <span class="token function">file</span> <span class="token punctuation">(</span>default: /usr/local/nginx/nginx.conf<span class="token punctuation">)</span>
+  -g directives <span class="token keyword">:</span> <span class="token keyword">set</span> global directives out of configuration <span class="token function">file</span>
+</code></pre>
+<p>可以在<code>/etc/rc.local</code>中添加开机启动</p>
+<h1 id="PHP"><a href="#PHP" class="headerlink" title="PHP"></a>PHP</h1><p>此处MariaDB安装参考<a href="http://www.cnblogs.com/freeweb/p/5425554.html" target="_blank" rel="noopener"><strong><em>这篇博客</em></strong></a><br>下载PHP源码，解压。</p>
+<pre class=" language-bash"><code class="language-bash"><span class="token function">wget</span> http://cn2.php.net/distributions/php-7.1.0.tar.gz
+<span class="token function">tar</span> zxvf php-7.1.0.tar.gz
+</code></pre>
+<p>安装PHP的各类依赖包</p>
+<pre class=" language-bash"><code class="language-bash">yum -y <span class="token function">install</span> libxml2 libxml2-devel openssl openssl-devel curl curl-devel libjpeg <span class="token function">install</span> libjpeg-devel <span class="token function">install</span> libpng <span class="token function">install</span> libpng-devel <span class="token function">install</span> freetype <span class="token function">install</span> freetype-devel <span class="token function">install</span> pcre <span class="token function">install</span> pcre-devel <span class="token function">install</span> libxslt <span class="token function">install</span> libxslt-devel
+</code></pre>
+<p>编译安装</p>
+<pre class=" language-bash"><code class="language-bash"><span class="token function">cd</span> php-7.1.0
+./configure --prefix<span class="token operator">=</span>/usr/local/php --with-curl --with-freetype-dir --with-gd --with-gettext --with-iconv-dir --with-kerberos --with-libdir<span class="token operator">=</span>lib64 --with-libxml-dir --with-mysqli --with-openssl --with-pcre-regex --with-pdo-mysql --with-pdo-sqlite --with-pear --with-png-dir --with-jpeg-dir --with-xmlrpc --with-xsl --with-zlib --with-bz2 --with-mhash --enable-fpm --enable-bcmath --enable-libxml --enable-inline-optimization --enable-gd-native-ttf --enable-mbregex --enable-mbstring --enable-opcache --enable-pcntl --enable-shmop --enable-soap --enable-sockets --enable-sysvsem --enable-sysvshm --enable-xml --enable-zip
+<span class="token function">make</span>
+<span class="token function">make</span> <span class="token function">install</span>
+</code></pre>
+<p>注意编译时间较久。<br>接下来配置PHP和nginx。首先从PHP源码目录中复制默认配置到相应目录</p>
+<pre class=" language-bash"><code class="language-bash"><span class="token function">cp</span> php.ini-development /usr/local/php/php.ini
+<span class="token function">cp</span> /usr/local/php/etc/php-fpm.conf.default /usr/local/php/etc/php-fpm.conf
+<span class="token function">cp</span> sapi/fpm/php-fpm /usr/local/bin
+</code></pre>
+<p>创建web用户</p>
+<pre class=" language-bash"><code class="language-bash"><span class="token function">groupadd</span> www-data
+<span class="token function">useradd</span> -g www-data www-data
+</code></pre>
+<p>修改<code>php-fpm.conf</code>中包含的<code>php-fpm.d</code>目录实际路径</p>
+<pre class=" language-bash"><code class="language-bash">vim /usr/local/php/etc/php-fpm.conf
+</code></pre>
+<p>修改其中包含配置的路径<code>include=NONE/etc/php-fpm.d/*.conf</code>为<code>/usr/local/php/etc/php-fpm.d/</code>下</p>
+<pre class=" language-bash"><code class="language-bash"><span class="token function">cp</span> /usr/local/php/etc/php-fpm.d/www.conf.default /usr/local/php/etc/php-fpm.d/www.conf
+vim /usr/local/php/etc/php-fpm.d/www.conf
+</code></pre>
+<p>添加用户名和用户组</p>
+<pre class=" language-bash"><code class="language-bash">user <span class="token operator">=</span> www-data
+group <span class="token operator">=</span> www-data
+</code></pre>
+<p>接下来修改nginx配置<code>vim /usr/local/nginx/nginx.conf</code>。修改nginx的运行用户和用户组为<code>www-data：www-data</code>。在<code>server{}</code>中的<code>location / {}</code>模块中加入<code>index.php</code>项，并删除释掉启动<code>location ~* \.php$ {}</code>模块，使php生效。修改<code>fastcgi</code>路径<code>fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;</code></p>
+<pre class=" language-bash"><code class="language-bash">user www-data www-data<span class="token punctuation">;</span>
+<span class="token punctuation">..</span>.
+<span class="token punctuation">..</span>.
+location / <span class="token punctuation">{</span>
+    root   html<span class="token punctuation">;</span>
+    index  index.html index.htm index.php<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token punctuation">..</span>.
+<span class="token punctuation">..</span>.
+location ~ \.php$ <span class="token punctuation">{</span>
+    root           html<span class="token punctuation">;</span>
+    fastcgi_pass   127.0.0.1:9000<span class="token punctuation">;</span>
+    fastcgi_index  index.php<span class="token punctuation">;</span>
+    <span class="token comment" spellcheck="true">#fastcgi_param  SCRIPT_FILENAME  /scripts$fastcgi_script_name;</span>
+    fastcgi_param  SCRIPT_FILENAME  <span class="token variable">$document_root</span><span class="token variable">$fastcgi_script_name</span><span class="token punctuation">;</span>
+    include        fastcgi_params<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>启动nginx和php-fpm</p>
+<pre class=" language-bash"><code class="language-bash">/usr/local/nginx/nginx -s restart
+/usr/local/bin/php-fpm
+</code></pre>
+<p>可通过查看php-fpm的9000端口是否在监听来判断php-fpm是否启动</p>
+<pre class=" language-bash"><code class="language-bash"><span class="token comment" spellcheck="true"># netstat -tln | grep 9000</span>
+tcp        0      0 127.0.0.1:9000              0.0.0.0:*                   LISTEN
+</code></pre>
+<p>接下里一般会在nginx的<code>html</code>目录下新建一个<code>vim info.php</code>来验证php能否正好解析。</p>
+<pre class=" language-php"><code class="language-php"><span class="token delimiter">&lt;?php</span>
+    <span class="token function">phpinfo</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token delimiter">?></span>
+</code></pre>
+<p>访问<code>http://ip/info.php</code>可以看到安装的php的版本和支持库之类的信息。<br><img src="/images/20170103.png" alt="phpinfo"></p>
+<h1 id="MariaDB"><a href="#MariaDB" class="headerlink" title="MariaDB"></a>MariaDB</h1><p>MariaDB是Mysql的一个分支，目前还是完全兼容Mysql的，所以在安装的时候目录和名称依然采用mysql的名字。<br>此处MariaDB安装参考<a href="http://www.cnblogs.com/freeweb/p/5991374.html" target="_blank" rel="noopener"><strong><em>这篇博客</em></strong></a><br>下载MariaDB源码，并解压</p>
+<pre class=" language-bash"><code class="language-bash"><span class="token function">mkdir</span> mariadb
+<span class="token function">cd</span> mariadb
+<span class="token function">wget</span> https://mirrors.tuna.tsinghua.edu.cn/mariadb//mariadb-10.1.20/source/mariadb-10.1.20.tar.gz
+<span class="token function">tar</span> zxvf mariadb-10.1.20.tar.gz
+</code></pre>
+<p>yum安装MariaDB依赖包</p>
+<pre class=" language-bash"><code class="language-bash">yum -y <span class="token function">install</span> readline-devel zlib-devel openssl-devel libaio-devel
+</code></pre>
+<p>数据库设计到原始数据，所以一般需要新建专用的用户和用户来运行。这里新建<code>mysql：mysql</code>用户和用户组，并不允许ssh远程登录。</p>
+<pre class=" language-bash"><code class="language-bash"><span class="token function">groupadd</span> -r mysql            <span class="token comment" spellcheck="true">#创建系统用户组</span>
+<span class="token function">useradd</span> -g mysql -s /sbin/nologin mysql    <span class="token comment" spellcheck="true">#创建用户，归属于mysql组，不允许远程登录</span>
+</code></pre>
+<p>接下来创建数据库目录，并更改为拥有者。此处将数据库数据存放在<code>/data/mysql</code>目录中。</p>
+<pre class=" language-bash"><code class="language-bash"><span class="token function">mkdir</span> -p /data/mysql
+<span class="token function">chown</span> -R mysql:mysql /data/mysql/
+</code></pre>
+<p>现在可以安装MariaDB了。</p>
+<pre class=" language-bash"><code class="language-bash"><span class="token function">cd</span> mariadb-10.1.20
+cmake <span class="token keyword">.</span> -DCMAKE_INSTALL_PREFIX<span class="token operator">=</span>/usr/local/mysql -DMYSQL_DATADIR<span class="token operator">=</span>/data/mysql -DSYSCONFDIR<span class="token operator">=</span>/etc -DWITHOUT_TOKUDB<span class="token operator">=</span>1 -DMYSQL_UNIX_ADDR<span class="token operator">=</span>/tmp/mysql.sock -DDEFAULT_CHARSET<span class="token operator">=</span>utf8 -DDEFAULT_COLLATION<span class="token operator">=</span>utf8_general_ci
+<span class="token function">make</span>
+<span class="token function">make</span> <span class="token function">install</span>
+</code></pre>
+<p>此处编译时间较长，需要耐心等待，若出现编译失败的情况，请删除目录下的编译缓存文件<code>CMakeCache.txt</code>后，更改相关依赖关系重新编译。<br>安装成功后，进入安装目录，初始化mysql服务器，并安装服务到系统服务中，设置开机启动服务。</p>
+<pre class=" language-bash"><code class="language-bash"><span class="token function">cd</span> /usr/local/mysql/
+<span class="token function">chown</span> -R mysql:mysql *
+scripts/mysql_install_db --user<span class="token operator">=</span>mysql
+<span class="token function">cp</span> support-files/mysql.server /etc/init.d/mysqld
+<span class="token function">chkconfig</span> --add mysqld    <span class="token comment" spellcheck="true"># 添加至系统服务</span>
+<span class="token function">chkconfig</span> mysqld on    <span class="token comment" spellcheck="true"># 设置开机自启动</span>
+</code></pre>
+<p>最后将<code>/var/lib/mysql/mysql.sock</code>链接到<code>/tmp/mysql.sock</code>，否者无法进入mysql。启动mysql服务。</p>
+<pre class=" language-bash"><code class="language-bash"><span class="token function">ln</span> -s /var/lib/mysql/mysql.sock /tmp/mysql.sock
+<span class="token function">service</span> mysqld start
+</code></pre>
+<p>后续操作参考mysql入门教程。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/LINUX/" rel="tag"># LINUX</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/12/25/nginx-rtmp/" rel="next" title="nginx-rtmp流媒体服务器">
+                <i class="fa fa-chevron-left"></i> nginx-rtmp流媒体服务器
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/08/20/grep-awk-matching-performance/" rel="prev" title="grep awk匹配字符串性能对比">
+                grep awk匹配字符串性能对比 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMDE1My82NzA4"></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.png"
+                alt="汪~" />
+            
+              <p class="site-author-name" itemprop="name">汪~</p>
+              <p class="site-description motion-element" itemprop="description">农村进城务工人员</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">16</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:toneytonight@nuaa.edu.cn" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://twitter.com/Bobbie_IEEE" target="_blank" title="Twitter">
+                      
+                        <i class="fa fa-fw fa-twitter"></i>Twitter</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.douban.com/people/toneytonight" target="_blank" title="Douban">
+                      
+                        <i class="fa fa-fw fa-link"></i>Douban</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://weibo.com/xxxuIEEE" target="_blank" title="Weibo">
+                      
+                        <i class="fa fa-fw fa-weibo"></i>Weibo</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Linux"><span class="nav-number">1.</span> <span class="nav-text">Linux</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Nginx"><span class="nav-number">2.</span> <span class="nav-text">Nginx</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#PHP"><span class="nav-number">3.</span> <span class="nav-text">PHP</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#MariaDB"><span class="nav-number">4.</span> <span class="nav-text">MariaDB</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2016 &mdash; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">汪~</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a></div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.3"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.3"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
