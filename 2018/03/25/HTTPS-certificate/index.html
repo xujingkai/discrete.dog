@@ -1,0 +1,1318 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicons/apple-touch-icon.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicons/favicon-32x32.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicons/favicon-16x16.png?v=5.1.3">
+
+
+  <link rel="mask-icon" href="/images/favicons/safari-pinned-tab.svg?v=5.1.3" color="#222">
+
+
+  <link rel="manifest" href="/images/favicons/manifest.json">
+
+
+  <meta name="msapplication-config" content="/images/favicons/browserconfig.xml" />
+
+
+
+  <meta name="keywords" content="HTTPS,NGINX," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="去年某客户需要使用HTTP/2业务来做人工直播内容审核用。具体操作应该为一个大屏幕，一个chrome浏览器，浏览器使用HTTP/2可以复用一个连接，向节点同时请求几十路流，随后进行审核。 由于彼时公司所使用的cache软件和前端反向代理软件均不支持HTTP/2，所以在客户要求的区域，搭建了两台NGINX服务的机器，由客户使用hosts访问的形式进行服务。 近期该客户所使用的证书过期，而由于该两台机">
+<meta name="keywords" content="HTTPS,NGINX">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HTTPs证书相关">
+<meta property="og:url" content="https://discrete.dog/2018/03/25/HTTPS-certificate/index.html">
+<meta property="og:site_name" content="离散汪">
+<meta property="og:description" content="去年某客户需要使用HTTP/2业务来做人工直播内容审核用。具体操作应该为一个大屏幕，一个chrome浏览器，浏览器使用HTTP/2可以复用一个连接，向节点同时请求几十路流，随后进行审核。 由于彼时公司所使用的cache软件和前端反向代理软件均不支持HTTP/2，所以在客户要求的区域，搭建了两台NGINX服务的机器，由客户使用hosts访问的形式进行服务。 近期该客户所使用的证书过期，而由于该两台机">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="https://discrete.dog/images/20180325001.png">
+<meta property="og:image" content="https://discrete.dog/images/20180325002.png">
+<meta property="og:image" content="https://discrete.dog/images/20180325003.png">
+<meta property="og:image" content="https://discrete.dog/images/20180325004.png">
+<meta property="og:image" content="https://discrete.dog/images/20180325005.png">
+<meta property="og:image" content="https://discrete.dog/images/20180325006.png">
+<meta property="og:image" content="https://discrete.dog/images/20180325007.png">
+<meta property="og:image" content="https://discrete.dog/images/20180325008.png">
+<meta property="og:image" content="https://discrete.dog/images/20180325009.png">
+<meta property="og:updated_time" content="2018-03-25T10:05:59.217Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="HTTPs证书相关">
+<meta name="twitter:description" content="去年某客户需要使用HTTP/2业务来做人工直播内容审核用。具体操作应该为一个大屏幕，一个chrome浏览器，浏览器使用HTTP/2可以复用一个连接，向节点同时请求几十路流，随后进行审核。 由于彼时公司所使用的cache软件和前端反向代理软件均不支持HTTP/2，所以在客户要求的区域，搭建了两台NGINX服务的机器，由客户使用hosts访问的形式进行服务。 近期该客户所使用的证书过期，而由于该两台机">
+<meta name="twitter:image" content="https://discrete.dog/images/20180325001.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.3',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":true,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://discrete.dog/2018/03/25/HTTPS-certificate/"/>
+
+
+
+
+
+  <title>HTTPs证书相关 | 离散汪</title>
+  
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/css/prism-atom-dark.css" type="text/css"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">离散汪</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="https://about.me/xujingkai" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-books">
+          <a href="/books" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-book"></i> <br />
+            
+            Books
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            Search
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="Searching..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://discrete.dog/2018/03/25/HTTPS-certificate/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="汪~">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="离散汪">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">HTTPs证书相关</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-03-25T10:26:19+08:00">
+                2018-03-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-eye"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <script src="\assets\js\APlayer.min.js"> </script><p>去年某客户需要使用<code>HTTP/2</code>业务来做人工直播内容审核用。具体操作应该为一个大屏幕，一个chrome浏览器，浏览器使用<code>HTTP/2</code>可以复用一个连接，向节点同时请求几十路流，随后进行审核。</p>
+<p>由于彼时公司所使用的cache软件和前端反向代理软件均不支持<code>HTTP/2</code>，所以在客户要求的区域，搭建了两台NGINX服务的机器，由客户使用hosts访问的形式进行服务。</p>
+<p>近期该客户所使用的证书过期，而由于该两台机器为人工配置，未自动更新新的证书，导致该服务异常。而客服人员所提供的新的证书没有包含私钥，导致证书一度无法更新。</p>
+<p>之前对于<code>HTTPs</code>业务一直未有真的接触，此次趁机学习一记。</p>
+<a id="more"></a>
+<h1 id="加密方式与应用"><a href="#加密方式与应用" class="headerlink" title="加密方式与应用"></a>加密方式与应用</h1><h2 id="对称加密"><a href="#对称加密" class="headerlink" title="对称加密"></a>对称加密</h2><p>对称加密的主要原理是，数据交互双方使用事先通过一定途径约定好的秘钥对需要传输的消息进行加密，并使用同样的秘钥对收到的加密消息进行解密。</p>
+<p>由于使用的加解密的秘钥一样，所以称为对称加密。常见的对称加密方式有DES、3DES、TDEA、Blowfish、RC2、RC4、RC5、IDEA、SKIPJACK、AES等。</p>
+<h2 id="非对称加密"><a href="#非对称加密" class="headerlink" title="非对称加密"></a>非对称加密</h2><p>非对称加密区别于对称加密的一点是，数据交互双方持有的秘钥不一样，一般用户持有的秘钥称为公钥，而服务端持有的秘钥为私钥。公钥可以公开，服务端对于任何请求方都可以响应其公钥。而私钥只能是服务端持有。</p>
+<p>当需要进行加密通信时，服务端将公钥提供给用户并携带一个随机数，用户利用公钥和随机数将需要传输的消息加密。服务端通过私钥解密，得到明文消息。</p>
+<p>服务端对需要响应的消息利用hash算法生成摘要，并利用私钥将摘要加密，形成数字签名。当客户端收到响应后，利用公钥解开数字签名，得到摘要，然后对收到的消息利用同样的hash算法生成摘要，对比两者摘要是否相同。如果相同，则认为响应消息来自指定服务端。</p>
+<p>常见的非对称加密有：RSA、Elgamal、背包算法、Rabin、D-H、ECC（椭圆曲线加密算法）。</p>
+<h2 id="实际应用"><a href="#实际应用" class="headerlink" title="实际应用"></a>实际应用</h2><p>非对称加解密的计算消耗要比对称加解密大很多，所以实际应用一般采用两者的结合达到速度和安全的两全其美。即：使用非对称机密方式传输对称加密的秘钥。用对称加密传输实际的消息。 </p>
+<h2 id="CA-certificate-authority"><a href="#CA-certificate-authority" class="headerlink" title="CA, certificate authority"></a>CA, certificate authority</h2><p>剩下的问题是如何在在非对称加密时，把服务器的公钥传输给请求方了。若是直接传输，公钥在传输过程如果发生劫持被替换成其他公钥怎么办。</p>
+<p>以上问题总结下来便是如何证明收到的公钥便是便是实际请求响应方给的呢。</p>
+<p>此处引入一个数字摘要的概念。消息摘要是将公钥和其他证书申请者的信息作为hash输入（预映射）而得到的hash值。由于hash唯一性，如果中途被篡改，则相应的消息摘要将发生变化，无法校验通过。</p>
+<p>为了防止中间劫持方修改整个公钥和其他预映射的信息，并生成新的消息摘要，服务端在提供消息摘要时，会使用有权威性的证书授权中心的私钥进行加密，而这些权威性的证书授权中心的公钥则预设在我们的操作系统或者浏览器中。当中途证书被劫持篡改后，将无法校验通过。</p>
+<p>上述权威性的证书授权中心即所谓的CA,certificate authority，比较著名的有Symantec，GeoTrust和新兴的免费的Let’s Encrypt等。</p>
+<h1 id="HTTPS交互"><a href="#HTTPS交互" class="headerlink" title="HTTPS交互"></a>HTTPS交互</h1><p>使用<code>cURL</code>发起一次<code>HTTPS</code>的请求，<code>cURL</code>记录的响应如下：</p>
+<pre class=" language-bash"><code class="language-bash">/usr/local/curl-7.55.1/bin/curl --http2 --cacert /etc/pki/tls/certs/ca-bundle.crt https://pull-flv-l1-hs-admin.pstatp.com/live/livestream.flv -v
+*   Trying 110.242.21.20<span class="token punctuation">..</span>.
+* TCP_NODELAY <span class="token keyword">set</span>
+* Connected to pull-flv-l1-hs-admin.pstatp.com <span class="token punctuation">(</span>110.242.21.20<span class="token punctuation">)</span> port 443 <span class="token punctuation">(</span><span class="token comment" spellcheck="true">#0)</span>
+* ALPN, offering h2
+* ALPN, offering http/1.1
+* Cipher selection: ALL:<span class="token operator">!</span>EXPORT:<span class="token operator">!</span>EXPORT40:<span class="token operator">!</span>EXPORT56:<span class="token operator">!</span>aNULL:<span class="token operator">!</span>LOW:<span class="token operator">!</span>RC4:@STRENGTH
+* successfully <span class="token keyword">set</span> certificate verify locations:
+*   CAfile: /etc/pki/tls/certs/ca-bundle.crt
+  CApath: none
+* TLSv1.2 <span class="token punctuation">(</span>OUT<span class="token punctuation">)</span>, TLS header, Certificate Status <span class="token punctuation">(</span>22<span class="token punctuation">)</span>:
+* TLSv1.2 <span class="token punctuation">(</span>OUT<span class="token punctuation">)</span>, TLS handshake, Client hello <span class="token punctuation">(</span>1<span class="token punctuation">)</span>:
+* TLSv1.2 <span class="token punctuation">(</span>IN<span class="token punctuation">)</span>, TLS handshake, Server hello <span class="token punctuation">(</span>2<span class="token punctuation">)</span>:
+* TLSv1.2 <span class="token punctuation">(</span>IN<span class="token punctuation">)</span>, TLS handshake, Certificate <span class="token punctuation">(</span>11<span class="token punctuation">)</span>:
+* TLSv1.2 <span class="token punctuation">(</span>IN<span class="token punctuation">)</span>, TLS handshake, Server key exchange <span class="token punctuation">(</span>12<span class="token punctuation">)</span>:
+* TLSv1.2 <span class="token punctuation">(</span>IN<span class="token punctuation">)</span>, TLS handshake, Server finished <span class="token punctuation">(</span>14<span class="token punctuation">)</span>:
+* TLSv1.2 <span class="token punctuation">(</span>OUT<span class="token punctuation">)</span>, TLS handshake, Client key exchange <span class="token punctuation">(</span>16<span class="token punctuation">)</span>:
+* TLSv1.2 <span class="token punctuation">(</span>OUT<span class="token punctuation">)</span>, TLS change cipher, Client hello <span class="token punctuation">(</span>1<span class="token punctuation">)</span>:
+* TLSv1.2 <span class="token punctuation">(</span>OUT<span class="token punctuation">)</span>, TLS handshake, Finished <span class="token punctuation">(</span>20<span class="token punctuation">)</span>:
+* TLSv1.2 <span class="token punctuation">(</span>IN<span class="token punctuation">)</span>, TLS change cipher, Client hello <span class="token punctuation">(</span>1<span class="token punctuation">)</span>:
+* TLSv1.2 <span class="token punctuation">(</span>IN<span class="token punctuation">)</span>, TLS handshake, Finished <span class="token punctuation">(</span>20<span class="token punctuation">)</span>:
+* SSL connection using TLSv1.2 / ECDHE-RSA-AES128-GCM-SHA256
+* ALPN, server accepted to use h2
+* Server certificate:
+*  subject: CN<span class="token operator">=</span>*.pstatp.com
+*  start date: Dec 21 00:00:00 2017 GMT
+*  expire date: Dec 26 12:00:00 2020 GMT
+*  subjectAltName: host <span class="token string">"pull-flv-l1-hs-admin.pstatp.com"</span> matched cert's <span class="token string">"*.pstatp.com"</span>
+*  issuer: C<span class="token operator">=</span>US<span class="token punctuation">;</span> O<span class="token operator">=</span>DigiCert Inc<span class="token punctuation">;</span> OU<span class="token operator">=</span>www.digicert.com<span class="token punctuation">;</span> CN<span class="token operator">=</span>RapidSSL RSA CA 2018
+*  SSL certificate verify ok.
+* Using HTTP2, server supports multi-use
+* Connection state changed <span class="token punctuation">(</span>HTTP/2 confirmed<span class="token punctuation">)</span>
+* Copying HTTP/2 data <span class="token keyword">in</span> stream buffer to connection buffer after upgrade: len<span class="token operator">=</span>0
+* Using Stream ID: 1 <span class="token punctuation">(</span>easy handle 0x10cc020<span class="token punctuation">)</span>
+<span class="token operator">></span> GET /live/livestream.flv HTTP/2
+<span class="token operator">></span> Host: pull-flv-l1-hs-admin.pstatp.com
+<span class="token operator">></span> User-Agent: curl/7.55.1
+<span class="token operator">></span> Accept: */*
+<span class="token operator">></span> 
+* Connection state changed <span class="token punctuation">(</span>MAX_CONCURRENT_STREAMS updated<span class="token punctuation">)</span><span class="token operator">!</span>
+<span class="token operator">&lt;</span> HTTP/2 200 
+<span class="token operator">&lt;</span> date: Sun, 25 Mar 2018 03:08:54 GMT
+<span class="token operator">&lt;</span> content-type: video/x-flv
+<span class="token operator">&lt;</span> cache-control: no-cache
+<span class="token operator">&lt;</span> expires: -1
+<span class="token operator">&lt;</span> pragma: no-cache
+<span class="token operator">&lt;</span> 
+Warning: Binary output can mess up your terminal. Use <span class="token string">"--output -"</span> to tell 
+Warning: curl to output it to your terminal anyway, or consider <span class="token string">"--output 
+Warning: &lt;FILE>"</span> to save to a file.
+* Failed writing body <span class="token punctuation">(</span>0 <span class="token operator">!=</span> 13<span class="token punctuation">)</span>
+* Closing connection 0
+* TLSv1.2 <span class="token punctuation">(</span>OUT<span class="token punctuation">)</span>, TLS alert, Client hello <span class="token punctuation">(</span>1<span class="token punctuation">)</span>:
+</code></pre>
+<p>可以看到<code>cURL</code>在tcp建联后，进入了<code>TLSv1.2</code>的SSL层数据交互。</p>
+<p>首先Client端发起<code>Client Hello</code>，会提供4字节的unix时间和用于后续使用的28字节随机数<code>random_C</code>。并且会携带客户端支持所有加密套件(Cipher Suites)名称，以供服务器选择，如下图一所示。</p>
+<p><img src="/images/20180325001.png" alt="图一"></p>
+<center>图一</center>
+
+<p>并且可能会在扩展信息(Extension)中携带请求URL的<code>server name</code>信息，方便服务器决定使用哪本SNI证书。关于SNI证书，可以查看<a href="https://en.wikipedia.org/wiki/Server_Name_Indication" target="_blank" rel="noopener">维基百科</a>。请求如下图二所示。</p>
+<p><img src="/images/20180325002.png" alt="图二"></p>
+<center>图二</center>
+
+<p>服务端收到<code>Client Hello</code>后会相应响应给客户端<code>Server Hello</code>，会提供服务端的4字节的unix时间和用于后续使用的28字节随机数<code>random_S</code>，并且选定客户端提供的支持的加密套件中的一种，如下图三中所示，选择是<code>**TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256**</code>，其具体的含义为：</p>
+<ul>
+<li><p>基于<code>TLS</code>协议；</p>
+</li>
+<li><p>使用ECDHE作为秘钥交换算法；</p>
+</li>
+<li><p>RSA作为签名认证；</p>
+</li>
+<li><p>AES_128_GCM作为对称加密算法；</p>
+</li>
+<li><p>SHA256作为摘要算法；</p>
+</li>
+</ul>
+<p>再深入的信息，估计是要看几本大部头的书才能理解了。</p>
+<p><img src="/images/20180325003.png" alt="图三"></p>
+<center>图三</center>
+
+<p>服务端在发送<code>Server Hello</code>之后，便会将相关的证书（包含公钥）发送给客户端，该操作称为<code>Certificate</code>，如下图四所示，其中包含的证书信息如下图五所示。</p>
+<p><img src="/images/20180325004.png" alt="图四"></p>
+<center>图四</center>
+
+<p><img src="/images/20180325005.png" alt="图五"></p>
+<center>图五</center>
+
+<p>此次加密通信中，使用的是<code>ECDHE</code>算法作为秘钥交换算法。所以服务端在发送<code>Certificate</code>消息后还会给出用于<code>ECDHE</code>加密使用的信息，称作<code>Server Key Exchange</code>。如下图六，服务端提供了加密算法所需的Pubkey以及对数据做了一次签名。</p>
+<p><img src="/images/20180325006.png" alt="图六"></p>
+<center>图六</center>
+
+<p>到此，服务端所需传递的数据均已完成，服务端发送一个<code>Server Hello done</code>消息，表示完成。如下图七。</p>
+<p><img src="/images/20180325007.png" alt="图七"></p>
+<center>图七</center>
+
+<p>接下来轮到客户端表演了。在收到服务端的<code>Server Key Exchange</code>之后，客户端会进行秘钥交换，做相应的<code>Client Key Exchange</code>动作，交换一些加密参数。如下图八。</p>
+<p>此时，不出意外，服务端和客户端就可以进行加密通信了。客户端发送<code>ChangeCipher Spec</code>消息，表示接下来开始加密通信，随后发送一个加密的握手消息<code>Encrypted Handshake Message</code>进行验证。如下图八。</p>
+<p><img src="/images/20180325008.png" alt="图八"></p>
+<center>图八</center>
+
+
+
+<p>服务端收到客户端开始加密通信的消息和加密的握手消息后，相应的也响应一个开始加密通信的消息<code>Change Cipher Spec</code>，并且也发送一个加密的握手消息<code>Encrypted Handshake Message</code>。如图十所示。</p>
+<p><img src="/images/20180325009.png" alt="图九"></p>
+<center>图九</center>
+
+
+
+<p>至此，加密通道完成建立，开始进行加密通信。直到客户端发起<code>Encrypted Alert</code>，表示结束为止。</p>
+<p>总结下来的流程图大致如此：</p>
+<div id="sequence-0"></div>
+
+<p>详细的加密算法基本也不用了解。太高深了。</p>
+<h1 id="NGINX证书配置"><a href="#NGINX证书配置" class="headerlink" title="NGINX证书配置"></a>NGINX证书配置</h1><p>NGINX作为proxy使用时的相关配置。</p>
+<p>对外域名为<code>pull.test.com</code>，启用<code>HTTP</code>和<code>HTTPS</code>，并且启用<code>HTTP2</code>，</p>
+<pre class=" language-nginx"><code class="language-nginx"><span class="token keyword">server</span> <span class="token punctuation">{</span>
+    <span class="token keyword">server_name</span> pull<span class="token punctuation">.</span>test<span class="token punctuation">.</span>com<span class="token punctuation">;</span>
+    <span class="token keyword">listen</span> <span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token punctuation">:</span><span class="token punctuation">]</span><span class="token punctuation">:</span><span class="token number">443</span> <span class="token keyword">ssl</span> http2 reuseport<span class="token punctuation">;</span>
+    <span class="token keyword">listen</span> <span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token punctuation">:</span><span class="token punctuation">]</span><span class="token punctuation">:</span><span class="token number">80</span> http2 reuseport<span class="token punctuation">;</span> 
+    <span class="token keyword">ssl_certificate</span> <span class="token operator">/</span>SSL_cert<span class="token operator">/</span>test<span class="token punctuation">.</span>com<span class="token punctuation">.</span>crt<span class="token punctuation">;</span>
+    <span class="token keyword">ssl_certificate_key</span> <span class="token operator">/</span>SSL_cert<span class="token operator">/</span>test<span class="token punctuation">.</span>com<span class="token punctuation">.</span>key<span class="token punctuation">;</span>
+    ssl_trusted_certificate <span class="token operator">/</span>SSL_cert<span class="token operator">/</span>test<span class="token punctuation">.</span>com<span class="token punctuation">.</span>ca<span class="token punctuation">;</span>    
+    <span class="token keyword">ssl_ciphers</span> ECDHE<span class="token operator">-</span>RSA<span class="token operator">-</span>AES128<span class="token operator">-</span>GCM<span class="token operator">-</span>SHA256<span class="token punctuation">:</span>ECDHE<span class="token operator">-</span>ECDSA<span class="token operator">-</span>AES128<span class="token operator">-</span>GCM<span class="token operator">-</span>SHA256<span class="token punctuation">:</span>ECDHE<span class="token operator">-</span>RSA<span class="token operator">-</span>AES256<span class="token operator">-</span>GCM<span class="token operator">-</span>SHA384<span class="token punctuation">:</span>ECDHE<span class="token operator">-</span>ECDSA<span class="token operator">-</span>AES256<span class="token operator">-</span>GCM<span class="token operator">-</span>SHA384<span class="token punctuation">:</span>DHE<span class="token operator">-</span>RSA<span class="token operator">-</span>AES128<span class="token operator">-</span>GCM<span class="token operator">-</span>SHA256<span class="token punctuation">:</span>DHE<span class="token operator">-</span>DSS<span class="token operator">-</span>AES128<span class="token operator">-</span>GCM<span class="token operator">-</span>SHA256<span class="token punctuation">:</span>kEDH<span class="token operator">+</span>AESGCM<span class="token punctuation">:</span>ECDHE<span class="token operator">-</span>RSA<span class="token operator">-</span>AES128<span class="token operator">-</span>SHA256<span class="token punctuation">:</span>ECDHE<span class="token operator">-</span>ECDSA<span class="token operator">-</span>AES128<span class="token operator">-</span>SHA256<span class="token punctuation">:</span>ECDHE<span class="token operator">-</span>RSA<span class="token operator">-</span>AES128<span class="token operator">-</span>SHA<span class="token punctuation">:</span>ECDHE<span class="token operator">-</span>ECDSA<span class="token operator">-</span>AES128<span class="token operator">-</span>SHA<span class="token punctuation">:</span>ECDHE<span class="token operator">-</span>RSA<span class="token operator">-</span>AES256<span class="token operator">-</span>SHA384<span class="token punctuation">:</span>ECDHE<span class="token operator">-</span>ECDSA<span class="token operator">-</span>AES256<span class="token operator">-</span>SHA384<span class="token punctuation">:</span>ECDHE<span class="token operator">-</span>RSA<span class="token operator">-</span>AES256<span class="token operator">-</span>SHA<span class="token punctuation">:</span>ECDHE<span class="token operator">-</span>ECDSA<span class="token operator">-</span>AES256<span class="token operator">-</span>SHA<span class="token punctuation">:</span>DHE<span class="token operator">-</span>RSA<span class="token operator">-</span>AES128<span class="token operator">-</span>SHA256<span class="token punctuation">:</span>DHE<span class="token operator">-</span>RSA<span class="token operator">-</span>AES128<span class="token operator">-</span>SHA<span class="token punctuation">:</span>DHE<span class="token operator">-</span>DSS<span class="token operator">-</span>AES128<span class="token operator">-</span>SHA256<span class="token punctuation">:</span>DHE<span class="token operator">-</span>RSA<span class="token operator">-</span>AES256<span class="token operator">-</span>SHA256<span class="token punctuation">:</span>DHE<span class="token operator">-</span>DSS<span class="token operator">-</span>AES256<span class="token operator">-</span>SHA<span class="token punctuation">:</span>DHE<span class="token operator">-</span>RSA<span class="token operator">-</span>AES256<span class="token operator">-</span>SHA<span class="token punctuation">:</span><span class="token operator">!</span>aNULL<span class="token punctuation">:</span><span class="token operator">!</span>eNULL<span class="token punctuation">:</span><span class="token operator">!</span>EXPORT<span class="token punctuation">:</span><span class="token operator">!</span>DES<span class="token punctuation">:</span><span class="token operator">!</span>RC4<span class="token punctuation">:</span><span class="token operator">!</span>3DES<span class="token punctuation">:</span><span class="token operator">!</span>MD5<span class="token punctuation">:</span><span class="token operator">!</span>PSK<span class="token punctuation">;</span> 
+
+    <span class="token keyword">location</span> <span class="token operator">/</span> <span class="token punctuation">{</span>
+        <span class="token keyword">set</span> <span class="token variable">$s_host</span> ori<span class="token punctuation">.</span>pull<span class="token punctuation">.</span>test<span class="token punctuation">.</span>com<span class="token punctuation">;</span>
+        <span class="token keyword">proxy_set_header</span> Host <span class="token variable">$s_host</span><span class="token punctuation">;</span>
+        more_set_headers <span class="token string">"Access-Control-Allow-Origin:*"</span><span class="token punctuation">;</span>
+        <span class="token keyword">proxy_pass</span> <span class="token keyword">http</span><span class="token punctuation">:</span><span class="token operator">/</span><span class="token operator">/</span><span class="token number">127.0</span><span class="token punctuation">.</span><span class="token number">0.1</span><span class="token punctuation">:</span>xxx<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token operator">/</span><span class="token operator">/</span>test URL
+    <span class="token keyword">location</span> <span class="token operator">=</span> <span class="token operator">/</span>live<span class="token operator">/</span>livestream<span class="token punctuation">.</span><span class="token keyword">flv</span> <span class="token punctuation">{</span>
+        <span class="token keyword">set</span> <span class="token variable">$s_host</span> test<span class="token punctuation">.</span>test<span class="token punctuation">.</span>com<span class="token punctuation">;</span>
+        <span class="token keyword">proxy_set_header</span> Host <span class="token variable">$s_host</span><span class="token punctuation">;</span>d
+        <span class="token keyword">proxy_pass</span> <span class="token keyword">http</span><span class="token punctuation">:</span><span class="token operator">/</span><span class="token operator">/</span><span class="token number">127.0</span><span class="token punctuation">.</span><span class="token number">0.1</span><span class="token punctuation">:</span>xxx<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p><script src="https://cdnjs.cloudflare.com/ajax/libs/webfont/1.6.27/webfontloader.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/snap.svg/0.4.1/snap.svg-min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/js-sequence-diagrams/1.0.6/sequence-diagram-min.js"></script><textarea id="sequence-0-code" style="display: none">Client->Server: Client Hello
+Server->Client: Server Hello
+Server->Client: Certificate
+Server->Client: Server Key Exchange
+Server->Client: Server Hello Done
+Client->Server: Client Key Exchange
+Client->Server: Change Cipher Spec
+Client->Server: Encrypted Handshake Message
+Server->Client: Change Cipher Spec
+Server->Client: Encrypted Handshake Message
+Client->Server: Application Data
+Server->Client: Application Data
+Client-->Server: ...
+Server-->Client: ...
+Client->Server: Encrypted Alert</textarea><textarea id="sequence-0-options" style="display: none">{"scale":1,"line-width":2,"line-length":50,"text-margin":10,"font-size":12,"theme":"simple"}</textarea><script>  var code = document.getElementById("sequence-0-code").value;  var options = JSON.parse(decodeURIComponent(document.getElementById("sequence-0-options").value));  var diagram = Diagram.parse(code);  diagram.drawSVG("sequence-0", options);</script></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/HTTPS/" rel="tag"># HTTPS</a>
+          
+            <a href="/tags/NGINX/" rel="tag"># NGINX</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/02/04/H265_format/" rel="next" title="H265码流格式">
+                <i class="fa fa-chevron-left"></i> H265码流格式
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMDE1My82NzA4"></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.png"
+                alt="汪~" />
+            
+              <p class="site-author-name" itemprop="name">汪~</p>
+              <p class="site-description motion-element" itemprop="description">农村进城务工人员</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">17</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:toneytonight@nuaa.edu.cn" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://twitter.com/Bobbie_IEEE" target="_blank" title="Twitter">
+                      
+                        <i class="fa fa-fw fa-twitter"></i>Twitter</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.douban.com/people/toneytonight" target="_blank" title="Douban">
+                      
+                        <i class="fa fa-fw fa-link"></i>Douban</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://weibo.com/xxxuIEEE" target="_blank" title="Weibo">
+                      
+                        <i class="fa fa-fw fa-weibo"></i>Weibo</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#加密方式与应用"><span class="nav-number">1.</span> <span class="nav-text">加密方式与应用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#对称加密"><span class="nav-number">1.1.</span> <span class="nav-text">对称加密</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#非对称加密"><span class="nav-number">1.2.</span> <span class="nav-text">非对称加密</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实际应用"><span class="nav-number">1.3.</span> <span class="nav-text">实际应用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CA-certificate-authority"><span class="nav-number">1.4.</span> <span class="nav-text">CA, certificate authority</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#HTTPS交互"><span class="nav-number">2.</span> <span class="nav-text">HTTPS交互</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#NGINX证书配置"><span class="nav-number">3.</span> <span class="nav-text">NGINX证书配置</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2016 &mdash; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">汪~</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a></div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.3"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.3"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
