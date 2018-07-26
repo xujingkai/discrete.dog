@@ -423,7 +423,7 @@ Linux LA 2.6.32-042stab113.21 <span class="token comment" spellcheck="true">#1 S
   -s signal     <span class="token keyword">:</span> send signal to a master process: stop, quit, reopen, reload
   -p prefix     <span class="token keyword">:</span> <span class="token keyword">set</span> prefix path <span class="token punctuation">(</span>default: /usr/local/nginx/<span class="token punctuation">)</span>
   -c filename   <span class="token keyword">:</span> <span class="token keyword">set</span> configuration <span class="token function">file</span> <span class="token punctuation">(</span>default: /usr/local/nginx/nginx.conf<span class="token punctuation">)</span>
-  -g directives <span class="token keyword">:</span> <span class="token keyword">set</span> global directives out of configuration <span class="token function">file</span>
+  -g directives <span class="token keyword">:</span> <span class="token keyword">set</span> global directives out of configuration <span class="token function">file</span>  
 </code></pre>
 <p>可以在<code>/etc/rc.local</code>中添加开机启动</p>
 <h1 id="PHP"><a href="#PHP" class="headerlink" title="PHP"></a>PHP</h1><p>此处MariaDB安装参考<a href="http://www.cnblogs.com/freeweb/p/5425554.html" target="_blank" rel="noopener"><strong><em>这篇博客</em></strong></a><br>下载PHP源码，解压。</p>
@@ -484,7 +484,7 @@ location ~ \.php$ <span class="token punctuation">{</span>
 </code></pre>
 <p>可通过查看php-fpm的9000端口是否在监听来判断php-fpm是否启动</p>
 <pre class=" language-bash"><code class="language-bash"><span class="token comment" spellcheck="true"># netstat -tln | grep 9000</span>
-tcp        0      0 127.0.0.1:9000              0.0.0.0:*                   LISTEN
+tcp        0      0 127.0.0.1:9000              0.0.0.0:*                   LISTEN      
 </code></pre>
 <p>接下里一般会在nginx的<code>html</code>目录下新建一个<code>vim info.php</code>来验证php能否正好解析。</p>
 <pre class=" language-php"><code class="language-php"><span class="token delimiter">&lt;?php</span>

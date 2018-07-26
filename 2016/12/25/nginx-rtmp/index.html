@@ -536,7 +536,8 @@ rtmp <span class="token punctuation">{</span>
             <span class="token keyword">root</span> <span class="token operator">/</span>path<span class="token operator">/</span>to<span class="token operator">/</span>stat<span class="token operator">/</span>xsl<span class="token operator">/</span>file<span class="token punctuation">;</span>
         <span class="token punctuation">}</span>
     <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
+<span class="token punctuation">}</span>  
+
 </code></pre>
 <p>访问<code>http://192.168.1.1:8765/stat</code>可以看到当前时间内的各个application 的概况。<br>也可以下载<code>http://192.168.1.1:8765/stat.xsl</code> 进行统计。<br>端口号根据nginx配置而定。<br><img src="/images/20161225.png" alt="statistic"></p>
 <h4 id="日志"><a href="#日志" class="headerlink" title="日志"></a>日志</h4><p>除了原生nginx 自带的<strong>error.log</strong> 和<strong>access.log</strong> 两个日志外，nginx-rtmp-module 模块还有一个<strong>rtmp-aceesss.log</strong> 日志。默认都是在nginx 的安装目录的 <code>/logs</code> 目录中。<br>查阅资料后发现，nginx 应该是可以自定日志的格式的。在配置文件中也可以定义错误日志的级别，有<br><strong>debug | info | notice | warn | error | crit</strong> 几个级别，大概排查问题都利用debug 级别的错误日志。</p>
