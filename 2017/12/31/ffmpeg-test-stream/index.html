@@ -116,24 +116,32 @@
 
 
 
-  <meta name="description" content="农村进城务工人员">
-<meta name="keywords" content="离散汪">
-<meta property="og:type" content="website">
-<meta property="og:title" content="离散汪">
-<meta property="og:url" content="https://discrete.dog/tags/工作/index.html">
+  <meta name="description" content="经常需要做测试以及功能验证，每次都要找个视频文件或者线上拉一路流推流。在某些测试场景下，视频文件和线上的流都存在一定的码率波动，对于实际的测试数据有一定的影响。所以需要一路码率、帧率、GOP等参数可调且尽可能标准的测试流，并且使用方式要尽可能的简答，适用大多数的场景。 一般机器都安装FFmpeg，所以打算用FFmpeg实现测试流的生成。查阅资料发现FFmpeg的lavfi自带简单的测试视频，利用f">
+<meta name="keywords" content="live,FFmpeg">
+<meta property="og:type" content="article">
+<meta property="og:title" content="FFmpeg测试序列">
+<meta property="og:url" content="https://discrete.dog/2017/12/31/ffmpeg-test-stream/index.html">
 <meta property="og:site_name" content="离散汪">
-<meta property="og:description" content="农村进城务工人员">
+<meta property="og:description" content="经常需要做测试以及功能验证，每次都要找个视频文件或者线上拉一路流推流。在某些测试场景下，视频文件和线上的流都存在一定的码率波动，对于实际的测试数据有一定的影响。所以需要一路码率、帧率、GOP等参数可调且尽可能标准的测试流，并且使用方式要尽可能的简答，适用大多数的场景。 一般机器都安装FFmpeg，所以打算用FFmpeg实现测试流的生成。查阅资料发现FFmpeg的lavfi自带简单的测试视频，利用f">
 <meta property="og:locale" content="en">
+<meta property="og:image" content="https://discrete.dog/images/20180101001.png">
+<meta property="og:image" content="https://discrete.dog/images/20180101002.png">
+<meta property="og:image" content="https://discrete.dog/images/20180101003.png">
+<meta property="og:image" content="https://discrete.dog/images/20180101004.png">
+<meta property="og:image" content="https://discrete.dog/images/20180101005.png">
+<meta property="og:image" content="https://discrete.dog/images/20180101006.png">
+<meta property="og:updated_time" content="2018-07-28T06:41:54.239Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="离散汪">
-<meta name="twitter:description" content="农村进城务工人员">
+<meta name="twitter:title" content="FFmpeg测试序列">
+<meta name="twitter:description" content="经常需要做测试以及功能验证，每次都要找个视频文件或者线上拉一路流推流。在某些测试场景下，视频文件和线上的流都存在一定的码率波动，对于实际的测试数据有一定的影响。所以需要一路码率、帧率、GOP等参数可调且尽可能标准的测试流，并且使用方式要尽可能的简答，适用大多数的场景。 一般机器都安装FFmpeg，所以打算用FFmpeg实现测试流的生成。查阅资料发现FFmpeg的lavfi自带简单的测试视频，利用f">
+<meta name="twitter:image" content="https://discrete.dog/images/20180101001.png">
 
 
 
 
 
 
-  <link rel="canonical" href="https://discrete.dog/tags/工作/"/>
+  <link rel="canonical" href="https://discrete.dog/2017/12/31/ffmpeg-test-stream/"/>
 
 
 
@@ -143,7 +151,7 @@
   };
 </script>
 
-  <title>Tag: 工作 | 离散汪</title>
+  <title>FFmpeg测试序列 | 离散汪</title>
   
 
 
@@ -200,7 +208,7 @@
     
   
 
-  <div class="container sidebar-position-left ">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -245,7 +253,7 @@
         
         
           
-          <li class="menu-item menu-item-tags menu-item-active">
+          <li class="menu-item menu-item-tags">
     <a href="/tags/" rel="section">
       <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />Tags</a>
   </li>
@@ -341,87 +349,444 @@
           
             
 
-    
-    
-      
-      
-    
-      
-      
-    
-      
-      
-    
-      
-      
-    
-      
-      
-    
-      
-      
-    
-    
-
-  
-
-
           
           <div id="content" class="content">
             
 
-  
-  
-  
-  <div class="post-block tag">
+  <div id="posts" class="posts-expand">
+    
 
-    <div id="posts" class="posts-collapse">
-      <div class="collection-title">
-        <h1>工作<small>Tag</small>
-        </h1>
-      </div>
+  
 
-      
-        
+  
+  
+  
+
+  
 
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://discrete.dog/2017/12/31/ffmpeg-test-stream/">
 
-      <h2 class="post-title">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="汪~">
+      <meta itemprop="description" content="农村进城务工人员">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="离散汪">
+    </span>
+
+    
+      <header class="post-header">
+
         
-            <a class="post-title-link" href="/2017/11/25/meander-in-November-3/" itemprop="url">
-              
-                <span itemprop="name">十一月的一些小想法（三）</span>
-              
-            </a>
         
-      </h2>
+          <h1 class="post-title" itemprop="name headline">FFmpeg测试序列
+              
+            
+          </h1>
+        
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-11-25T22:16:12+08:00"
-              content="2017-11-25" >
-          11-25
-        </time>
-      </div>
+        <div class="post-meta">
+          <span class="post-time">
 
-    </header>
-  </article>
+            
+            
+            
 
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2018-01-01 02:23:12" itemprop="dateCreated datePublished" datetime="2018-01-01T02:23:12+08:00">2018-01-01</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2018-07-28 14:41:54" itemprop="dateModified" datetime="2018-07-28T14:41:54+08:00">2018-07-28</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon"
+            >
+            <i class="fa fa-eye"></i>
+             Views:  
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>经常需要做测试以及功能验证，每次都要找个视频文件或者线上拉一路流推流。在某些测试场景下，视频文件和线上的流都存在一定的码率波动，对于实际的测试数据有一定的影响。所以需要一路码率、帧率、GOP等参数可调且尽可能标准的测试流，并且使用方式要尽可能的简答，适用大多数的场景。</p>
+<p>一般机器都安装<code>FFmpeg</code>，所以打算用<code>FFmpeg</code>实现测试流的生成。查阅资料发现<code>FFmpeg</code>的<code>lavfi</code>自带简单的测试视频，利用<code>ffmpeg</code>本身的一堆编码参数便可以得到想要的标准测试流。</p>
+<a id="more"></a>
+<h1 id="FFmpeg安装"><a href="#FFmpeg安装" class="headerlink" title="FFmpeg安装"></a>FFmpeg安装</h1><p><code>FFmpeg</code>的安装，参考官网的指南足矣。其他的安装指南写得再好，还是没有官方的好，而且附带中文版，集成了几乎平时用到的所有lib。</p>
+<p><a href="https://trac.ffmpeg.org/wiki/CompilationGuide/Centos" target="_blank" rel="noopener">CentOS安装FFmpeg指南</a></p>
+<p>我在一台VPS上安装<code>X265</code>库的时候出了个问题：</p>
+<p><img src="/images/20180101001.png" alt="X265 make error"></p>
+<p>我通过以下操作解决：</p>
+<p>卸载<code>yum</code>原本的<code>yasm</code></p>
+<pre class=" language-bash"><code class="language-bash">yum remove yasm
+</code></pre>
+<p>将按照官方指南中安装的高版本的<code>yasm</code>链接到<code>PATH</code></p>
+<pre class=" language-bash"><code class="language-bash"><span class="token function">ln</span> -s /root/bin/yasm/usr/bin/yasm
+</code></pre>
+<p>安装完毕</p>
+<p><img src="/images/20180101002.png" alt="FFmpeg"></p>
+<h1 id="测试流生成"><a href="#测试流生成" class="headerlink" title="测试流生成"></a>测试流生成</h1><h2 id="视频"><a href="#视频" class="headerlink" title="视频"></a>视频</h2><p>利用lavfi生成测试视频，查到以下说明，按图索骥即可生成测试图像。</p>
+<p><a href="http://www.bogotobogo.com/FFMpeg/ffmpeg_video_test_patterns_src.php" target="_blank" rel="noopener">http://www.bogotobogo.com/FFMpeg/ffmpeg_video_test_patterns_src.php</a></p>
+<p>此处我采用的参数如下，使用testsrc这个图像，很有小时候周二下午的回忆。</p>
+<pre class=" language-bash"><code class="language-bash">-f lavfi -i <span class="token string">"testsrc=size=1920x1080:rate=30:duration=5"</span>
+</code></pre>
+<p>参数含义：</p>
+<table>
+<thead>
+<tr>
+<th><strong>参数</strong></th>
+<th><strong>含义</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>testsrc</code></td>
+<td>使用<code>testsrc</code>作为测试画面</td>
+</tr>
+<tr>
+<td><code>size</code></td>
+<td>分辨率</td>
+</tr>
+<tr>
+<td><code>rate</code></td>
+<td>帧率</td>
+</tr>
+<tr>
+<td><code>duration</code></td>
+<td>持续时间</td>
+</tr>
+</tbody>
+</table>
+<h2 id="音频"><a href="#音频" class="headerlink" title="音频"></a>音频</h2><p>测试音频采用sine正弦波。可条件频率，采样率等参数。具体参考官网说明</p>
+<p><a href="https://lists.ffmpeg.org/pipermail/ffmpeg-cvslog/2013-March/062382.html" target="_blank" rel="noopener">https://lists.ffmpeg.org/pipermail/ffmpeg-cvslog/2013-March/062382.html</a></p>
+<p>此处我采用的参数是：</p>
+<pre class=" language-bash"><code class="language-bash">-f lavfi -i <span class="token string">"sine=frequency=440:sample_rate=44100:beep_factor=4:duration=5"</span>
+</code></pre>
+<p>参数含义：</p>
+<table>
+<thead>
+<tr>
+<th><strong>参数</strong></th>
+<th><strong>含义</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>sine</code></td>
+<td>使用正弦波信号作为输入</td>
+</tr>
+<tr>
+<td><code>frequency</code></td>
+<td>正弦波频率</td>
+</tr>
+<tr>
+<td><code>sample_rate</code></td>
+<td>音频采样率</td>
+</tr>
+<tr>
+<td><code>beep_factor</code></td>
+<td>每秒产生一个蜂鸣，蜂鸣频率为正弦波频率的四倍</td>
+</tr>
+<tr>
+<td><code>duration</code></td>
+<td>持续时间</td>
+</tr>
+</tbody>
+</table>
+<h2 id="合成测试流"><a href="#合成测试流" class="headerlink" title="合成测试流"></a>合成测试流</h2><p>将以上视频和音频作为<code>FFmpeg</code>的输入，通过ffmpeg自带的一些编码参数和码率控制参数输出。</p>
+<pre class=" language-bash"><code class="language-bash">ffmpeg -f lavfi -i testsrc<span class="token operator">=</span>duration<span class="token operator">=</span>5:size<span class="token operator">=</span>1920x1080:rate<span class="token operator">=</span>300 \
+    -f lavfi -i sine<span class="token operator">=</span>frequency<span class="token operator">=</span>440:sample_rate<span class="token operator">=</span>44100:beep_factor<span class="token operator">=</span>4:duration<span class="token operator">=</span>5 \
+    -acodec libfdk_aac \
+    -vcodec libx264  -bf 0 -b:a 100k  -b:v 1900k -bufsize 1000k \
+    -r 30 -g 30 -sc_threshold 0 \
+    -profile baseline -pix_fmt yuv420p \
+    -f flv test.flv
+</code></pre>
+<p>输出画面如下：</p>
+<p><img src="/images/20180101003.png" alt="test stream"></p>
+<p>观察生成的<code>test.flv</code>，发生其码率并不是指定的音频100kbps，视频1900kbps，而是只有730kbps。</p>
+<pre class=" language-bash"><code class="language-bash"><span class="token comment" spellcheck="true"># ffmpeg -i test.flv </span>
+<span class="token punctuation">..</span>.
+Input <span class="token comment" spellcheck="true">#0, flv, from 'test.flv':</span>
+  Metadata:
+    encoder         <span class="token keyword">:</span> Lavf58.3.100
+  Duration: 00:00:05.08, start: 0.000000, bitrate: 730 kb/s
+    Stream <span class="token comment" spellcheck="true">#0:0: Video: h264 (Constrained Baseline), yuv420p(progressive), 1920x1080 [SAR 1:1 DAR 16:9], 1900 kb/s, 30 fps, 30 tbr, 1k tbn, 60 tbc</span>
+    Stream <span class="token comment" spellcheck="true">#0:1: Audio: aac (LC), 44100 Hz, mono, fltp, 100 kb/s</span>
+</code></pre>
+<p>无论如何修改指定的码率的值，输出码率总是明显小于指定值。</p>
+<p>查阅资料后，使用<code>x264</code>的参数，启用CBR模式，解决问题，码率稳定在2000kbps左右：</p>
+<pre class=" language-bash"><code class="language-bash">ffmpeg -f lavfi -i testsrc<span class="token operator">=</span>duration<span class="token operator">=</span>5:size<span class="token operator">=</span>1920x1080:rate<span class="token operator">=</span>30 \
+    -f lavfi -i sine<span class="token operator">=</span>frequency<span class="token operator">=</span>440:sample_rate<span class="token operator">=</span>44100:beep_factor<span class="token operator">=</span>4:duration<span class="token operator">=</span>5 \
+    -acodec libfdk_aac -b:a 100k \
+    -vcodec libx264 -x264opts bitrate<span class="token operator">=</span>1900:vbv-maxrate<span class="token operator">=</span>1900:vbv-bufsize<span class="token operator">=</span>1000:nal_hrd<span class="token operator">=</span>cbr \
+    -r 30 -g 30 -sc_threshold 0 \
+    -profile baseline -pix_fmt yuv420p \
+    -f flv test.flv
+</code></pre>
+<p>以上<code>FFmpeg</code>参数含义：</p>
+<table>
+<thead>
+<tr>
+<th><strong>参数</strong></th>
+<th><strong>含义</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-acodec libfdk_aac</code></td>
+<td>指定音频编码为<code>aac</code>格式</td>
+</tr>
+<tr>
+<td><code>-b:a 100k</code></td>
+<td>指定音频编码输出码率为100kbps</td>
+</tr>
+<tr>
+<td><code>-vcodec libx264</code></td>
+<td>指定视频编码为<code>h264</code>格式</td>
+</tr>
+<tr>
+<td><code>-x264opts</code></td>
+<td>启用<code>x264</code>参数</td>
+</tr>
+<tr>
+<td><code>-x264opts bitrate=1900</code></td>
+<td><code>x264</code>参数：指定视频输出码率为1900kbps</td>
+</tr>
+<tr>
+<td><code>-x264opts vbv-maxrate=1900</code></td>
+<td><code>x264</code>参数：指定视频输出的最高码率为1900kbps</td>
+</tr>
+<tr>
+<td><code>-x264opts vbv-bufsize=1000</code></td>
+<td><code>x264</code>参数：指定视频编码的buffer为1000kb</td>
+</tr>
+<tr>
+<td><code>-x264opts nal_hrd=cbr</code></td>
+<td><code>x264</code>参数：设置HRD为CBR，严格按照指定码率转码</td>
+</tr>
+<tr>
+<td><code>-r 30</code></td>
+<td>指定输出帧率为30fps</td>
+</tr>
+<tr>
+<td><code>-g 30</code></td>
+<td>指定输出视频<code>GOP</code>为30帧</td>
+</tr>
+<tr>
+<td><code>-sc_threshold 0</code></td>
+<td>视频编码关闭 <code>scenecut</code>模式，用以不再自动生成I帧</td>
+</tr>
+<tr>
+<td><code>-profile baseline</code></td>
+<td>指定视频编码规则为<code>baseline</code></td>
+</tr>
+<tr>
+<td><code>-pix_fmt yuv420p</code></td>
+<td>指定输出数据格式为<code>yuv420p</code>，<code>baseline</code>只支持这种</td>
+</tr>
+<tr>
+<td><code>-f flv</code></td>
+<td>指定输出封装为<code>flv</code>格式</td>
+</tr>
+</tbody>
+</table>
+<pre class=" language-bash"><code class="language-bash"><span class="token comment" spellcheck="true"># ffmpeg -i test1.flv </span>
+<span class="token punctuation">..</span>.
+Input <span class="token comment" spellcheck="true">#0, flv, from 'test1.flv':</span>
+  Metadata:
+    encoder         <span class="token keyword">:</span> Lavf58.3.100
+  Duration: 00:00:05.05, start: 0.000000, bitrate: 1975 kb/s
+    Stream <span class="token comment" spellcheck="true">#0:0: Video: h264 (Constrained Baseline), yuv420p(progressive), 1920x1080 [SAR 1:1 DAR 16:9], 1900 kb/s, 30 fps, 30 tbr, 1k tbn, 60 tbc</span>
+    Stream <span class="token comment" spellcheck="true">#0:1: Audio: aac (LC), 44100 Hz, mono, fltp, 100 kb/s</span>
+At least one output <span class="token function">file</span> must be specified
+</code></pre>
+<p><img src="/images/20180101004.png" alt="2000kbps stream"></p>
+<p>此处观察<code>FFmpeg</code>打印的日志发现，两次转码只在<code>x264</code>的参数上差了一个指标，如下两图，下图指定了<code>nal_hrd=cbr</code>。</p>
+<p><img src="/images/20180101005.png" alt="nal_hrd=none"></p>
+<p><img src="/images/20180101006.png" alt="nal_hrd=cbr"></p>
+<p>那么这个<code>nal_hrd=cbr</code>又是什么鬼呢？</p>
+<h2 id="HRD？没搞明白"><a href="#HRD？没搞明白" class="headerlink" title="HRD？没搞明白"></a>HRD？没搞明白</h2><p>上述两者的唯一区别便是nal_hrd是否有设置成CBR，CBR(Constant Bitrate, 常数比特率 ) ABR(Average Bitrate)<br>VBR(Variable Bitrate)只是x264按下不表。并没有查到相关资料，没有搞明白这些跟HRD有啥关系。</p>
+<p>假想码流调度器(hypothetical reference decoder, HRD)，<a href="https://en.wikipedia.org/wiki/Video_buffering_verifier" target="_blank" rel="noopener">wiki</a>上说在264标准中，HRD已经被VBV代替了，也就是设置的<code>vbv-maxrate</code>和<code>vbv-bufsize</code>两个参数。不清楚为什么还需要设置HRD为CBR模式。</p>
+<p>关于VBV中<code>vbv-maxrate</code>和<code>vbv-bufsize</code>两个参数的关系，这个文章中有所解释：<a href="http://www.bretl.com/mpeghtml/VBV.HTM" target="_blank" rel="noopener">http://www.bretl.com/mpeghtml/VBV.HTM</a></p>
+<h1 id="实际使用"><a href="#实际使用" class="headerlink" title="实际使用"></a>实际使用</h1><pre class=" language-bash"><code class="language-bash">ffmpeg -re -f lavfi -i testsrc<span class="token operator">=</span>duration<span class="token operator">=</span>5:size<span class="token operator">=</span>1920x1080:rate<span class="token operator">=</span>30 \
+    -re -f lavfi -i sine<span class="token operator">=</span>frequency<span class="token operator">=</span>440:sample_rate<span class="token operator">=</span>44100:beep_factor<span class="token operator">=</span>4:duration<span class="token operator">=</span>5 \
+    -acodec libfdk_aac -b:a 100k \
+    -vcodec libx264 -x264opts bitrate<span class="token operator">=</span>1900:vbv-maxrate<span class="token operator">=</span>1900:vbv-bufsize<span class="token operator">=</span>1000:nal_hrd<span class="token operator">=</span>cbr \
+    -r 30 -g 30 -sc_threshold 0 \
+    -profile baseline -pix_fmt yuv420p \
+    -f flv rtmp://127.0.0.1:1935/xujk.test.com/live/stream
+</code></pre>
 
       
     </div>
 
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>Post author:  </strong>汪~</li>
+  <li class="post-copyright-link">
+    <strong>Post link: </strong>
+    <a href="https://discrete.dog/2017/12/31/ffmpeg-test-stream/" title="FFmpeg测试序列">https://discrete.dog/2017/12/31/ffmpeg-test-stream/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> unless stating additionally.</li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/live/" rel="tag"># live</a>
+          
+            <a href="/tags/FFmpeg/" rel="tag"># FFmpeg</a>
+          
+        </div>
+      
+
+      
+      
+        <div class="post-widgets">
+        
+
+        
+
+        
+          
+          <div id="needsharebutton-postbottom">
+            <span class="btn">
+              <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </span>
+          </div>
+        
+        </div>
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/12/23/NIC-buffer-issue-Cotinued/" rel="next" title="网卡缓冲值问题-续">
+                <i class="fa fa-chevron-left"></i> 网卡缓冲值问题-续
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/01/21/avcC-annexB/" rel="prev" title="H264码流中的avcC和Annex-B">
+                H264码流中的avcC和Annex-B <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
+  </article>
 
-  
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
           
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMDE1My82NzA4"></div>
+    </div>
+
+  
+
+
 
         </div>
         
@@ -442,8 +807,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -569,6 +943,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#FFmpeg安装"><span class="nav-number">1.</span> <span class="nav-text">FFmpeg安装</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#测试流生成"><span class="nav-number">2.</span> <span class="nav-text">测试流生成</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#视频"><span class="nav-number">2.1.</span> <span class="nav-text">视频</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#音频"><span class="nav-number">2.2.</span> <span class="nav-text">音频</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#合成测试流"><span class="nav-number">2.3.</span> <span class="nav-text">合成测试流</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HRD？没搞明白"><span class="nav-number">2.4.</span> <span class="nav-text">HRD？没搞明白</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#实际使用"><span class="nav-number">3.</span> <span class="nav-text">实际使用</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -721,6 +1111,10 @@
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.3.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.3.0"></script>
+
+
 
   
 
@@ -745,6 +1139,17 @@
 
 
 
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
   
 
 
