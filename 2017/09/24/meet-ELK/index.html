@@ -1,468 +1,253 @@
 <!DOCTYPE html>
-
-
-
-
-
-
-
-
-
-
-
-
-  
-
-
-<html class="theme-next pisces use-motion" lang="en">
+<html lang="en">
 <head>
-  <meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
-
-
-
-  
-  
-  <link rel="stylesheet" href="/lib/needsharebutton/needsharebutton.css">
-
-
-
-
-
-
-
-
-
-
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
-
-<link href="/css/main.css?v=6.3.0" rel="stylesheet" type="text/css" />
-
-
-  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicons/apple-touch-icon.png?v=6.3.0">
-
-
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicons/favicon-32x32.png?v=6.3.0">
-
-
-  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicons/favicon-16x16.png?v=6.3.0">
-
-
-  <link rel="mask-icon" href="/images/favicons/safari-pinned-tab.svg?v=6.3.0" color="#222">
-
-
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicons/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicons/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicons/favicon-16x16.png">
+  <link rel="mask-icon" href="/images/favicons/logo.svg" color="#222">
   <link rel="manifest" href="/images/favicons/manifest.json">
+  <meta name="msapplication-config" content="/images/favicons/browserconfig.xml">
+
+<link rel="stylesheet" href="/css/main.css">
 
 
-  <meta name="msapplication-config" content="/images/favicons/browserconfig.xml" />
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
 
-
-
-
-
-
-
-<script type="text/javascript" id="hexo.configurations">
-  var NexT = window.NexT || {};
-  var CONFIG = {
-    root: '/',
-    scheme: 'Pisces',
-    version: '6.3.0',
-    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
-    fancybox: false,
-    fastclick: false,
-    lazyload: false,
-    tabs: true,
-    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
-    algolia: {
-      applicationID: '',
-      apiKey: '',
-      indexName: '',
-      hits: {"per_page":10},
-      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
-    }
-  };
-</script>
-
-
-  
-
-
-
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":true,"preload":true},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
 
   <meta name="description" content="​    近期遇到有分日志数据需要分析，计算部分不算复杂，直接shell脚本跑一遍大致也可以完成，但是其数据维度较多，分析结果不易展示。希望可以导入数据库，按照需要sql提取数据，进行展示。 ​    对于笔者这种没有开发经验的小白来说，做这么系统是天方夜谭了。（认清现实呀） ​    所以必须得有现成的解决方案的，附上条件：  开源的，可不希望为了这个付出大代价；  比较流行的，对于小白来说，肯">
-<meta name="keywords" content="LINUX,analysis">
 <meta property="og:type" content="article">
 <meta property="og:title" content="ELK初体验">
-<meta property="og:url" content="https://discrete.dog/2017/09/24/meet-ELK/index.html">
-<meta property="og:site_name" content="离散汪">
+<meta property="og:url" content="http://yoursite.com/2017/09/24/meet-ELK/index.html">
+<meta property="og:site_name" content="木头汪">
 <meta property="og:description" content="​    近期遇到有分日志数据需要分析，计算部分不算复杂，直接shell脚本跑一遍大致也可以完成，但是其数据维度较多，分析结果不易展示。希望可以导入数据库，按照需要sql提取数据，进行展示。 ​    对于笔者这种没有开发经验的小白来说，做这么系统是天方夜谭了。（认清现实呀） ​    所以必须得有现成的解决方案的，附上条件：  开源的，可不希望为了这个付出大代价；  比较流行的，对于小白来说，肯">
-<meta property="og:locale" content="en">
-<meta property="og:image" content="https://discrete.dog/images/20170924.png">
-<meta property="og:image" content="https://discrete.dog/images/20170924_2.png">
-<meta property="og:updated_time" content="2018-07-28T06:41:54.239Z">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://yoursite.com/images/20170924.png">
+<meta property="og:image" content="http://yoursite.com/images/20170924_2.png">
+<meta property="article:published_time" content="2017-09-24T08:06:28.000Z">
+<meta property="article:modified_time" content="2017-11-21T12:44:37.000Z">
+<meta property="article:author" content="波比Bobbie">
+<meta property="article:tag" content="LINUX">
+<meta property="article:tag" content="analysis">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="ELK初体验">
-<meta name="twitter:description" content="​    近期遇到有分日志数据需要分析，计算部分不算复杂，直接shell脚本跑一遍大致也可以完成，但是其数据维度较多，分析结果不易展示。希望可以导入数据库，按照需要sql提取数据，进行展示。 ​    对于笔者这种没有开发经验的小白来说，做这么系统是天方夜谭了。（认清现实呀） ​    所以必须得有现成的解决方案的，附上条件：  开源的，可不希望为了这个付出大代价；  比较流行的，对于小白来说，肯">
-<meta name="twitter:image" content="https://discrete.dog/images/20170924.png">
+<meta name="twitter:image" content="http://yoursite.com/images/20170924.png">
+
+<link rel="canonical" href="http://yoursite.com/2017/09/24/meet-ELK/">
 
 
-
-
-
-
-  <link rel="canonical" href="https://discrete.dog/2017/09/24/meet-ELK/"/>
-
-
-
-<script type="text/javascript" id="page.configurations">
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
   CONFIG.page = {
     sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
   };
 </script>
 
-  <title>ELK初体验 | 离散汪</title>
+  <title>ELK初体验 | 木头汪</title>
   
 
 
-
-
-
-
-  <script type="text/javascript">
-    var _hmt = _hmt || [];
-    (function() {
-      var hm = document.createElement("script");
-      hm.src = "https://hm.baidu.com/hm.js?726e308c3dee9c58dbd2061ef6426407";
-      var s = document.getElementsByTagName("script")[0];
-      s.parentNode.insertBefore(hm, s);
-    })();
-  </script>
 
 
 
 
   <noscript>
-  <style type="text/css">
-    .use-motion .motion-element,
-    .use-motion .brand,
-    .use-motion .menu-item,
-    .sidebar-inner,
-    .use-motion .post-block,
-    .use-motion .pagination,
-    .use-motion .comments,
-    .use-motion .post-header,
-    .use-motion .post-body,
-    .use-motion .collection-title { opacity: initial; }
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
 
-    .use-motion .logo,
-    .use-motion .site-title,
-    .use-motion .site-subtitle {
-      opacity: initial;
-      top: initial;
-    }
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
 
-    .use-motion {
-      .logo-line-before i { left: initial; }
-      .logo-line-after i { right: initial; }
-    }
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
   </style>
 </noscript>
 
-<link rel="stylesheet" href="/css/prism-atom-dark.css" type="text/css"></head>
+</head>
 
-<body itemscope itemtype="http://schema.org/WebPage" lang="en">
-
-  
-  
-    
-  
-
-  <div class="container sidebar-position-left page-post-detail">
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
     <div class="headband"></div>
 
-    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
-      <div class="header-inner"><div class="site-brand-wrapper">
-  <div class="site-meta ">
-    
-
-    <div class="custom-logo-site-title">
-      <a href="/" class="brand" rel="start">
-        <span class="logo-line-before"><i></i></span>
-        <span class="site-title">离散汪</span>
-        <span class="logo-line-after"><i></i></span>
-      </a>
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
     </div>
-    
   </div>
 
-  <div class="site-nav-toggle">
-    <button aria-label="Toggle navigation bar">
-      <span class="btn-bar"></span>
-      <span class="btn-bar"></span>
-      <span class="btn-bar"></span>
-    </button>
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">木头汪</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">都是些木头一样的事情</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
   </div>
 </div>
+
 
 
 
 <nav class="site-nav">
-  
-    <ul id="menu" class="menu">
-      
-        
-        
-        
-          
-          <li class="menu-item menu-item-home">
-    <a href="/" rel="section">
-      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />Home</a>
-  </li>
-        
-        
-        
-          
-          <li class="menu-item menu-item-tags">
-    <a href="/tags/" rel="section">
-      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />Tags</a>
-  </li>
-        
-        
-        
-          
-          <li class="menu-item menu-item-archives">
-    <a href="/archives/" rel="section">
-      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />Archives</a>
-  </li>
-        
-        
-        
-          
-          <li class="menu-item menu-item-books">
-    <a href="/books" rel="section">
-      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />Books</a>
-  </li>
-        
-        
-        
-          
-          <li class="menu-item menu-item-movies">
-    <a href="/movies" rel="section">
-      <i class="menu-item-icon fa fa-fw fa-film"></i> <br />Movies</a>
-  </li>
-        
-        
-        
-          
-          <li class="menu-item menu-item-about">
-    <a href="https:\/about.me/xujingkai" rel="section">
-      <i class="menu-item-icon fa fa-fw fa-user"></i> <br />About</a>
-  </li>
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
 
-      
-      
-        <li class="menu-item menu-item-search">
-          
-            <a href="javascript:;" class="popup-trigger">
-          
-            
-              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />Search</a>
-        </li>
-      
-    </ul>
-  
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
 
-  
+  </li>
+        <li class="menu-item menu-item-tags">
 
-  
-    <div class="site-search">
-      
-  <div class="popup search-popup local-search-popup">
-  <div class="local-search-header clearfix">
-    <span class="search-icon">
-      <i class="fa fa-search"></i>
-    </span>
-    <span class="popup-btn-close">
-      <i class="fa fa-times-circle"></i>
-    </span>
-    <div class="local-search-input-wrapper">
-      <input autocomplete="off"
-             placeholder="Searching..." spellcheck="false"
-             type="text" id="local-search-input">
-    </div>
-  </div>
-  <div id="local-search-result"></div>
-</div>
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
 
+  </li>
+        <li class="menu-item menu-item-archives">
 
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
 
-    </div>
-  
+  </li>
+        <li class="menu-item menu-item-movies">
+
+    <a href="/movies/" rel="section"><i class="fas fa-film fa-fw"></i>movies</a>
+
+  </li>
+        <li class="menu-item menu-item-books">
+
+    <a href="/books/" rel="section"><i class="fas fa-book fa-fw"></i>books</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
 </nav>
 
 
 
-  
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
 
-
+    </div>
+  </div>
 
 </div>
     </header>
 
     
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
 
 
-    <main id="main" class="main">
+    <main class="main">
       <div class="main-inner">
         <div class="content-wrap">
           
+
+          <div class="content post posts-expand">
             
 
-          
-          <div id="content" class="content">
-            
-
-  <div id="posts" class="posts-expand">
     
-
-  
-
   
   
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://discrete.dog/2017/09/24/meet-ELK/">
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/09/24/meet-ELK/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="离散汪">
-      <meta itemprop="description" content="农村进城务工人员">
       <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="波比Bobbie">
+      <meta itemprop="description" content="农村进城务工人员的木头活儿">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="离散汪">
+      <meta itemprop="name" content="木头汪">
     </span>
-
-    
       <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">ELK初体验
-              
-            
-          </h1>
-        
+        <h1 class="post-title" itemprop="name headline">
+          ELK初体验
+        </h1>
 
         <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
+            <span class="post-meta-item">
               <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
+                <i class="far fa-calendar"></i>
               </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-
-              
-                
-              
+              <span class="post-meta-item-text">Posted on</span>
 
               <time title="Created: 2017-09-24 16:06:28" itemprop="dateCreated datePublished" datetime="2017-09-24T16:06:28+08:00">2017-09-24</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">Edited on</span>
-                
-                <time title="Modified: 2018-07-28 14:41:54" itemprop="dateModified" datetime="2018-07-28T14:41:54+08:00">2018-07-28</time>
-              
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-            <span class="post-meta-divider">|</span>
-            <span class="post-meta-item-icon"
-            >
-            <i class="fa fa-eye"></i>
-             Views:  
-            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
             </span>
-          
-
-          
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2017-11-21 20:44:37" itemprop="dateModified" datetime="2017-11-21T20:44:37+08:00">2017-11-21</time>
+              </span>
 
           
 
         </div>
       </header>
-    
 
     
     
     
     <div class="post-body" itemprop="articleBody">
-
-      
-      
 
       
         <p>​    近期遇到有分日志数据需要分析，计算部分不算复杂，直接shell脚本跑一遍大致也可以完成，但是其数据维度较多，分析结果不易展示。希望可以导入数据库，按照需要sql提取数据，进行展示。</p>
@@ -476,12 +261,17 @@
 </li>
 </ul>
 <a id="more"></a>
+
+
+
 <h1 id="ELK是什么？"><a href="#ELK是什么？" class="headerlink" title="ELK是什么？"></a>ELK是什么？</h1><p>​    小白对于ELK的理解比较简单，大概是这样：    </p>
 <p>​    ELK是三个独立组件组成一套数据接收，处理（简单处理），存储，以及展示的系统。</p>
 <p>​    其中的优点是：</p>
 <ul>
-<li>完成部署后，是实时处理数据的，十分便捷；</li>
-<li>听说elasticsearch可以分布式部署，运作，可用性和承载量很高；（小白啥也不知道，你说好用就好用吧）</li>
+<li><p>完成部署后，是实时处理数据的，十分便捷；</p>
+</li>
+<li><p>听说elasticsearch可以分布式部署，运作，可用性和承载量很高；（小白啥也不知道，你说好用就好用吧）</p>
+</li>
 <li><p>部署简单，基本就解压就可以用了；</p>
 <p>其架构大概如此：</p>
 </li>
@@ -489,17 +279,11 @@
 <div id="flowchart-0" class="flow-chart"></div>
 
 <h1 id="安装ELK"><a href="#安装ELK" class="headerlink" title="安装ELK"></a>安装ELK</h1><h2 id="系统环境"><a href="#系统环境" class="headerlink" title="系统环境"></a>系统环境</h2><p>​    本次使用的为单台的CentOS 5.8的物理机。</p>
-<pre class=" language-bash"><code class="language-bash">Distributor ID:    CentOS
-Description:    CentOS release 5.8 <span class="token punctuation">(</span>Final<span class="token punctuation">)</span>
-Release:    5.8
-Codename:    Final
-</code></pre>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Distributor ID:	CentOS</span><br><span class="line">Description:	CentOS release 5.8 (Final)</span><br><span class="line">Release:	5.8</span><br><span class="line">Codename:	Final</span><br></pre></td></tr></table></figure>
+
 <h2 id="java环境"><a href="#java环境" class="headerlink" title="java环境"></a>java环境</h2><p>​    另外这套系统全部由运行在java上，所以需要java1.8的环境，具体安装不再赘述，参考<a href="http://www.cnblogs.com/zeze/p/5902124.html" target="_blank" rel="noopener">这篇博文</a>。</p>
-<pre class=" language-bash"><code class="language-bash"><span class="token comment" spellcheck="true"># java -version</span>
-java version <span class="token string">"1.8.0_144"</span>
-Java<span class="token punctuation">(</span>TM<span class="token punctuation">)</span> SE Runtime Environment <span class="token punctuation">(</span>build 1.8.0_144-b01<span class="token punctuation">)</span>
-Java HotSpot<span class="token punctuation">(</span>TM<span class="token punctuation">)</span> 64-Bit Server VM <span class="token punctuation">(</span>build 25.144-b01, mixed mode<span class="token punctuation">)</span>
-</code></pre>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># java -version</span></span><br><span class="line">java version <span class="string">"1.8.0_144"</span></span><br><span class="line">Java(TM) SE Runtime Environment (build 1.8.0_144-b01)</span><br><span class="line">Java HotSpot(TM) 64-Bit Server VM (build 25.144-b01, mixed mode)</span><br></pre></td></tr></table></figure>
+
 <h2 id="安装ELK-1"><a href="#安装ELK-1" class="headerlink" title="安装ELK"></a>安装ELK</h2><p>​    安装上文已经介绍了，非常简单，在<a href="https://www.elastic.co" target="_blank" rel="noopener">ELASTIC官网</a>下载，下载解压即可。</p>
 <p>​    本次使用的版本是：</p>
 <ul>
@@ -509,545 +293,248 @@ Java HotSpot<span class="token punctuation">(</span>TM<span class="token punctua
 </ul>
 <h2 id="配置启动"><a href="#配置启动" class="headerlink" title="配置启动"></a>配置启动</h2><h3 id="logstash"><a href="#logstash" class="headerlink" title="logstash"></a>logstash</h3><p>​    logstash进行简单的配置之后，就可以直接运行了。</p>
 <h4 id="简单测试"><a href="#简单测试" class="headerlink" title="简单测试"></a>简单测试</h4><p>​    按照惯例会使用最简单的std输入和std输出测试logstash能否正常工作。</p>
-<pre class=" language-bash"><code class="language-bash">./logstash-5.5.2/bin/logstash -e <span class="token string">'input{stdin{}}output{stdout{codec=>rubydebug}}'</span>
-</code></pre>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./logstash-5.5.2/bin/logstash -e <span class="string">'input&#123;stdin&#123;&#125;&#125;output&#123;stdout&#123;codec=&gt;rubydebug&#125;&#125;'</span></span><br></pre></td></tr></table></figure>
+
 <p>​    在标准输入中输入内容。比如<code>test</code>，会在标准输出打印先相关内容。</p>
-<pre class=" language-json"><code class="language-json"><span class="token punctuation">{</span>
-    <span class="token string">"@timestamp"</span> => <span class="token number">2017</span>-<span class="token number">09</span>-19T15<span class="token operator">:</span><span class="token number">24</span><span class="token operator">:</span><span class="token number">24</span>.021Z<span class="token punctuation">,</span>
-      <span class="token string">"@version"</span> => <span class="token string">"1"</span><span class="token punctuation">,</span>
-          <span class="token string">"host"</span> => <span class="token string">"localhost"</span><span class="token punctuation">,</span>
-       <span class="token string">"message"</span> => <span class="token string">"test"</span>
-<span class="token punctuation">}</span>
-</code></pre>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    "@timestamp" =&gt; 2017-09-19T15:24:24.021Z,</span><br><span class="line">      "@version" =&gt; "1",</span><br><span class="line">          "host" =&gt; "localhost",</span><br><span class="line">       "message" =&gt; "test"</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>​    其中<code>@timestamp</code>字段是事件发生的时间，默认会添加。</p>
 <h4 id="简单配置"><a href="#简单配置" class="headerlink" title="简单配置"></a>简单配置</h4><p>​    编辑该配置文件<code>./logstash-5.5.2/config/logstash.conf</code>，填入logstash的输入<code>input{}</code>，处理<code>filter{}</code>，输出<code>output{}</code>信息：</p>
-<pre class=" language-bash"><code class="language-bash">input<span class="token punctuation">{</span>
-  <span class="token comment" spellcheck="true">#输入相关配置</span>
-<span class="token punctuation">}</span>
-filter<span class="token punctuation">{</span>
-  <span class="token comment" spellcheck="true">#数据处理相关配置</span>
-<span class="token punctuation">}</span>
-output<span class="token punctuation">{</span>
-  <span class="token comment" spellcheck="true">#输出相关配置</span>
-<span class="token punctuation">}</span>
-</code></pre>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">input&#123;</span><br><span class="line">  <span class="comment">#输入相关配置</span></span><br><span class="line">&#125;</span><br><span class="line">filter&#123;</span><br><span class="line">  <span class="comment">#数据处理相关配置</span></span><br><span class="line">&#125;</span><br><span class="line">output&#123;</span><br><span class="line">  <span class="comment">#输出相关配置</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <h5 id="input"><a href="#input" class="headerlink" title="input{}"></a>input{}</h5><p>​    <code>input{}</code>即输入相关配置，logstash支持文件形式(<code>file</code>)，标准输入(<code>stdin</code>)，syslog协议(<code>syslog</code>)，tcp(<code>tcp</code>)四种方式。</p>
 <p>​    <code>input</code>还支持常见的数据格式，如json，需要使用<code>codec</code>插件，详细不赘述。可以查看<a href="https://www.elastic.co/guide/en/logstash/current/input-plugins.html" target="_blank" rel="noopener">官网</a>学习。</p>
 <h5 id="filter"><a href="#filter" class="headerlink" title="filter{}"></a>filter{}</h5><p>​    <code>filter{}</code>即logstash中的数据处理部分，主要有各类丰富的插件完成。这边介绍下使用的常见的几个：</p>
 <h6 id="grok"><a href="#grok" class="headerlink" title="grok"></a>grok</h6><p>​    <code>grok</code>可以编码各种正则来提取所需要的信息，并且可以指定数据的格式。其基本语法为：</p>
-<pre class=" language-bash"><code class="language-bash">filter <span class="token punctuation">{</span>
-  grok <span class="token punctuation">{</span> match <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">{</span> <span class="token string">"message"</span> <span class="token operator">=</span><span class="token operator">></span> <span class="token string">"Duration: %{NUMBER:duration}"</span> <span class="token punctuation">}</span> <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">filter &#123;</span><br><span class="line">  grok &#123; match =&gt; &#123; <span class="string">"message"</span> =&gt; <span class="string">"Duration: %&#123;NUMBER:duration&#125;"</span> &#125; &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>​    其中<code>NUMBER</code>是事先编写好的pattern，或者是自带的pattern，上例的含义为，将<code>Duration:</code>后符合<code>NUMBER</code>pattern的数据赋值给<code>duration</code>。</p>
 <p>​    <code>grok</code>详细操作与介绍可以参考<a href="https://www.elastic.co/guide/en/logstash/current/plugins-filters-grok.html" target="_blank" rel="noopener">grok官方介绍</a>。</p>
 <h6 id="date"><a href="#date" class="headerlink" title="date"></a>date</h6><p>​    <code>date</code>插件可以将日期和时间格式的数据转化成想要的格式，其中也内置很多标准的格式，其基本语法为：</p>
-<pre class=" language-bash"><code class="language-bash">filter <span class="token punctuation">{</span>
-  <span class="token function">date</span> <span class="token punctuation">{</span>
-    match <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">[</span> <span class="token string">"logdate"</span>, <span class="token string">"MMM dd yyyy HH:mm:ss"</span> <span class="token punctuation">]</span>
-  <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">filter &#123;</span><br><span class="line">  date &#123;</span><br><span class="line">    match =&gt; [ <span class="string">"logdate"</span>, <span class="string">"MMM dd yyyy HH:mm:ss"</span> ]</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>​    上例的含义为，将<code>logdate</code>的日志格式转为<code>MMM dd yyyy HH:mm:ss</code>的形式。</p>
 <p>​    <code>date</code>详细操作与介绍可以参考<a href="https://www.elastic.co/guide/en/logstash/current/plugins-filters-date.html" target="_blank" rel="noopener">date官方介绍</a>。</p>
 <h6 id="json"><a href="#json" class="headerlink" title="json"></a>json</h6><p>​    <code>json</code>插件可以对<code>grok</code>match到的变量进行json解格式，其基本用法为：</p>
-<pre class=" language-bash"><code class="language-bash">filter <span class="token punctuation">{</span>
-  json <span class="token punctuation">{</span>
-    <span class="token function">source</span> <span class="token operator">=</span><span class="token operator">></span> <span class="token string">"message"</span>
-  <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">filter &#123;</span><br><span class="line">  json &#123;</span><br><span class="line">    <span class="built_in">source</span> =&gt; <span class="string">"message"</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>​    上例的含义为，将<code>source</code>解json。</p>
 <p>​    <code>json</code>详细操作与介绍可以参考<a href="https://www.elastic.co/guide/en/logstash/current/plugins-filters-json.html" target="_blank" rel="noopener">json官方介绍</a>。</p>
 <h6 id="split"><a href="#split" class="headerlink" title="split"></a>split</h6><p>​    <code>split</code>可以将某一事件按照某个字符进行拆分，比如：</p>
-<pre class=" language-bash"><code class="language-bash">filter <span class="token punctuation">{</span>
-    <span class="token function">split</span> <span class="token punctuation">{</span>
-        field <span class="token operator">=</span><span class="token operator">></span> <span class="token string">"message"</span>
-        terminator <span class="token operator">=</span><span class="token operator">></span> <span class="token string">"#"</span>
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">filter &#123;</span><br><span class="line">    split &#123;</span><br><span class="line">        field =&gt; <span class="string">"message"</span></span><br><span class="line">        terminator =&gt; <span class="string">"#"</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>​    上例的含义为，将<code>message</code>field按照<code>#</code>进行拆分。</p>
 <p>​    <code>split</code>详细操作与介绍可以参考<a href="https://www.elastic.co/guide/en/logstash/current/plugins-filters-split.html" target="_blank" rel="noopener">split官方介绍</a>。</p>
 <h6 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h6><p>​    关于<code>filter</code>其他插件以及使用方法，可以查看<a href="https://www.elastic.co/guide/en/logstash/current/filter-plugins.html" target="_blank" rel="noopener">这里</a>。</p>
 <h5 id="output"><a href="#output" class="headerlink" title="output{}"></a>output{}</h5><p>​    logstash支持非常多的输出选项，输出到文件，输出到stdout，输出到端口，输出到email等，比如常见的输出到<code>elasticsearch</code>：</p>
-<pre class=" language-bash"><code class="language-bash">output <span class="token punctuation">{</span>
-    elasticsearch <span class="token punctuation">{</span>
-        hosts <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">[</span><span class="token string">"192.168.0.2:9200"</span><span class="token punctuation">]</span>
-        index <span class="token operator">=</span><span class="token operator">></span> <span class="token string">"logstash-%{type}-%{+YYYY.MM.dd}"</span>
-        document_type <span class="token operator">=</span><span class="token operator">></span> <span class="token string">"%{type}"</span>
-        flush_size <span class="token operator">=</span><span class="token operator">></span> 20000
-        idle_flush_time <span class="token operator">=</span><span class="token operator">></span> 10
-        sniffing <span class="token operator">=</span><span class="token operator">></span> <span class="token boolean">true</span>
-        template_overwrite <span class="token operator">=</span><span class="token operator">></span> <span class="token boolean">true</span>
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">output &#123;</span><br><span class="line">    elasticsearch &#123;</span><br><span class="line">        hosts =&gt; [<span class="string">"192.168.0.2:9200"</span>]</span><br><span class="line">        index =&gt; <span class="string">"logstash-%&#123;type&#125;-%&#123;+YYYY.MM.dd&#125;"</span></span><br><span class="line">        document_type =&gt; <span class="string">"%&#123;type&#125;"</span></span><br><span class="line">        flush_size =&gt; 20000</span><br><span class="line">        idle_flush_time =&gt; 10</span><br><span class="line">        sniffing =&gt; <span class="literal">true</span></span><br><span class="line">        template_overwrite =&gt; <span class="literal">true</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>​    <code>elasticsearch</code>输出参数非常多，可定制性也很强，可以从<a href="https://www.elastic.co/guide/en/logstash/current/plugins-outputs-elasticsearch.html" target="_blank" rel="noopener">elasticsearch官方介绍</a> 了解详细的信息。</p>
 <p>​    其他形式的输出也可以从<a href="https://www.elastic.co/guide/en/logstash/current/output-plugins.html" target="_blank" rel="noopener">output官方介绍</a>了解。</p>
 <h5 id="其他-1"><a href="#其他-1" class="headerlink" title="其他"></a>其他</h5><p>​    关于logstash的其他配置和功能，可以查看其<a href="https://www.elastic.co/guide/en/logstash/current/index.html" target="_blank" rel="noopener">官方教程</a>。 </p>
-<h4 id="启动logstash"><a href="#启动logstash" class="headerlink" title="启动logstash"></a>启动logstash</h4><pre class=" language-bash"><code class="language-bash">./logstash-5.5.2/bin/logstash -f ./logstash-5.5.2/conf/logstash.conf
-</code></pre>
+<h4 id="启动logstash"><a href="#启动logstash" class="headerlink" title="启动logstash"></a>启动logstash</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./logstash-5.5.2/bin/logstash -f ./logstash-5.5.2/conf/logstash.conf</span><br></pre></td></tr></table></figure>
+
 <h3 id="Elasticsearch"><a href="#Elasticsearch" class="headerlink" title="Elasticsearch"></a>Elasticsearch</h3><p>​    elasticsearch经过简单配置，直接运行即可。</p>
-<pre class=" language-bash"><code class="language-bash"><span class="token function">vi</span> ./config/elasticsearch.yml 
-<span class="token punctuation">..</span>.
-<span class="token comment" spellcheck="true">#修改cluster名称</span>
-cluster.name: test_cluster
-<span class="token comment" spellcheck="true">#修改node名称</span>
-node.name: node-1
-<span class="token comment" spellcheck="true">#填写IP</span>
-network.host: ***.***.***.***
-<span class="token comment" spellcheck="true">#填写端口</span>
-http.port: 9200
-</code></pre>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">vi ./config/elasticsearch.yml </span><br><span class="line">...</span><br><span class="line"><span class="comment">#修改cluster名称</span></span><br><span class="line">cluster.name: test_cluster</span><br><span class="line"><span class="comment">#修改node名称</span></span><br><span class="line">node.name: node-1</span><br><span class="line"><span class="comment">#填写IP</span></span><br><span class="line">network.host: ***.***.***.***</span><br><span class="line"><span class="comment">#填写端口</span></span><br><span class="line">http.port: 9200</span><br></pre></td></tr></table></figure>
+
 <p>​    其他配置根据需要配置。总体来说配置的内容较少。直接启动程序，测试9200是否可以正常运行。    </p>
-<pre class=" language-bash"><code class="language-bash">./bin/elasticsearch
-curl http://***.***.***.***:9200/
-<span class="token punctuation">{</span>
-  <span class="token string">"name"</span> <span class="token keyword">:</span> <span class="token string">"node-1"</span>,
-  <span class="token string">"cluster_name"</span> <span class="token keyword">:</span> <span class="token string">"test_cluster"</span>,
-  <span class="token string">"cluster_uuid"</span> <span class="token keyword">:</span> <span class="token string">"lIW3ERtnQGqoXd_fPZgr6Q"</span>,
-  <span class="token string">"version"</span> <span class="token keyword">:</span> <span class="token punctuation">{</span>
-    <span class="token string">"number"</span> <span class="token keyword">:</span> <span class="token string">"5.5.2"</span>,
-    <span class="token string">"build_hash"</span> <span class="token keyword">:</span> <span class="token string">"b2f0c09"</span>,
-    <span class="token string">"build_date"</span> <span class="token keyword">:</span> <span class="token string">"2017-08-14T12:33:14.154Z"</span>,
-    <span class="token string">"build_snapshot"</span> <span class="token keyword">:</span> false,
-    <span class="token string">"lucene_version"</span> <span class="token keyword">:</span> <span class="token string">"6.6.0"</span>
-  <span class="token punctuation">}</span>,
-  <span class="token string">"tagline"</span> <span class="token keyword">:</span> <span class="token string">"You Know, for Search"</span>
-<span class="token punctuation">}</span>
-</code></pre>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">./bin/elasticsearch</span><br><span class="line">curl http://***.***.***.***:9200/</span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"name"</span> : <span class="string">"node-1"</span>,</span><br><span class="line">  <span class="string">"cluster_name"</span> : <span class="string">"test_cluster"</span>,</span><br><span class="line">  <span class="string">"cluster_uuid"</span> : <span class="string">"lIW3ERtnQGqoXd_fPZgr6Q"</span>,</span><br><span class="line">  <span class="string">"version"</span> : &#123;</span><br><span class="line">    <span class="string">"number"</span> : <span class="string">"5.5.2"</span>,</span><br><span class="line">    <span class="string">"build_hash"</span> : <span class="string">"b2f0c09"</span>,</span><br><span class="line">    <span class="string">"build_date"</span> : <span class="string">"2017-08-14T12:33:14.154Z"</span>,</span><br><span class="line">    <span class="string">"build_snapshot"</span> : <span class="literal">false</span>,</span><br><span class="line">    <span class="string">"lucene_version"</span> : <span class="string">"6.6.0"</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="string">"tagline"</span> : <span class="string">"You Know, for Search"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>​    返回es的一些信息，表示es正常运行。</p>
 <p><strong>注意事项:</strong></p>
 <p>​    ES本身不允许root运行，并且对于运行有些条件。如果机器性能达不到要求，可以在<code>./configjvm.options</code>中调低java运行参数。</p>
 <p>​    另外，如果有以下报错，请更改响应的参数。</p>
-<pre class=" language-bash"><code class="language-bash">ERROR: <span class="token punctuation">[</span>3<span class="token punctuation">]</span> bootstrap checks failed
-<span class="token punctuation">[</span>1<span class="token punctuation">]</span>: max <span class="token function">file</span> descriptors <span class="token punctuation">[</span>4096<span class="token punctuation">]</span> <span class="token keyword">for</span> elasticsearch process is too low, increase to at least <span class="token punctuation">[</span>65536<span class="token punctuation">]</span>
-<span class="token punctuation">[</span>2<span class="token punctuation">]</span>: max number of threads <span class="token punctuation">[</span>1024<span class="token punctuation">]</span> <span class="token keyword">for</span> user <span class="token punctuation">[</span>elk<span class="token punctuation">]</span> is too low, increase to at least <span class="token punctuation">[</span>2048<span class="token punctuation">]</span>
-<span class="token punctuation">[</span>3<span class="token punctuation">]</span>: max virtual memory areas vm.max_map_count <span class="token punctuation">[</span>65530<span class="token punctuation">]</span> is too low, increase to at least <span class="token punctuation">[</span>262144<span class="token punctuation">]</span>
-</code></pre>
-<pre class=" language-bash"><code class="language-bash">sysctl -w vm.max_map_count<span class="token operator">=</span>262144
-vim /etc/security/limits.conf
-elk soft nofile 65536
-elk hard nofile 65536
-elk soft nproc 2048
-elk hard nproc 4096
-</code></pre>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ERROR: [3] bootstrap checks failed</span><br><span class="line">[1]: max file descriptors [4096] <span class="keyword">for</span> elasticsearch process is too low, increase to at least [65536]</span><br><span class="line">[2]: max number of threads [1024] <span class="keyword">for</span> user [elk] is too low, increase to at least [2048]</span><br><span class="line">[3]: max virtual memory areas vm.max_map_count [65530] is too low, increase to at least [262144]</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">sysctl -w vm.max_map_count=262144</span><br><span class="line">vim /etc/security/limits.conf</span><br><span class="line">elk soft nofile 65536</span><br><span class="line">elk hard nofile 65536</span><br><span class="line">elk soft nproc 2048</span><br><span class="line">elk hard nproc 4096</span><br></pre></td></tr></table></figure>
+
 <p>​    出现以下报错</p>
-<pre class=" language-bash"><code class="language-bash">system call filters failed to <span class="token function">install</span><span class="token punctuation">;</span> check the logs and fix your configuration or disable system call filters at your own risk
-</code></pre>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">system call filters failed to install; check the logs and fix your configuration or <span class="built_in">disable</span> system call filters at your own risk</span><br></pre></td></tr></table></figure>
 <p>​    因为Centos6不支持SecComp，导致启动失败，详情可以看github这个<a href="https://github.com/elastic/elasticsearch/issues/22899" target="_blank" rel="noopener">issue</a>。</p>
 <p>​    解决办法是关闭下面两个选项：</p>
-<pre class=" language-bash"><code class="language-bash"><span class="token function">vi</span> ./config/elasticsearch.yml 
-bootstrap.memory_lock: <span class="token boolean">false</span>
-bootstrap.system_call_filter: <span class="token boolean">false</span>
-</code></pre>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">vi ./config/elasticsearch.yml </span><br><span class="line">bootstrap.memory_lock: <span class="literal">false</span></span><br><span class="line">bootstrap.system_call_filter: <span class="literal">false</span></span><br></pre></td></tr></table></figure>
+
 <h3 id="kibana"><a href="#kibana" class="headerlink" title="kibana"></a>kibana</h3><p>​    kibana经过简单配置，直接运行即可。</p>
-<pre class=" language-bash"><code class="language-bash"><span class="token function">vi</span> ./config/kibana.yml
-<span class="token punctuation">..</span>.
-<span class="token comment" spellcheck="true">#配置端口</span>
-server.port: 5601
-<span class="token comment" spellcheck="true">#配置host</span>
-server.host: <span class="token string">"***.***.***.***"</span>
-<span class="token comment" spellcheck="true">#配置es查询地址</span>
-elasticsearch.url: <span class="token string">"http://124.164.8.39:9200"</span>
-</code></pre>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">vi ./config/kibana.yml</span><br><span class="line">...</span><br><span class="line"><span class="comment">#配置端口</span></span><br><span class="line">server.port: 5601</span><br><span class="line"><span class="comment">#配置host</span></span><br><span class="line">server.host: <span class="string">"***.***.***.***"</span></span><br><span class="line"><span class="comment">#配置es查询地址</span></span><br><span class="line">elasticsearch.url: <span class="string">"http://124.164.8.39:9200"</span></span><br></pre></td></tr></table></figure>
+
 <p>​    其余配置项可以保留默认值。</p>
-<pre class=" language-bash"><code class="language-bash">./bin/kibana
-<span class="token comment" spellcheck="true">#curl探测成功即可。</span>
-curl -I http://124.164.8.39:5601
-HTTP/1.1 200 OK
-kbn-name: kibana
-kbn-version: 5.5.2
-cache-control: no-cache
-Date: Sun, 24 Sep 2017 08:05:21 GMT
-Connection: keep-alive
-</code></pre>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">./bin/kibana</span><br><span class="line"><span class="comment">#curl探测成功即可。</span></span><br><span class="line">curl -I http://124.164.8.39:5601</span><br><span class="line">HTTP/1.1 200 OK</span><br><span class="line">kbn-name: kibana</span><br><span class="line">kbn-version: 5.5.2</span><br><span class="line">cache-control: no-cache</span><br><span class="line">Date: Sun, 24 Sep 2017 08:05:21 GMT</span><br><span class="line">Connection: keep-alive</span><br></pre></td></tr></table></figure>
+
 <h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>kibana界面：</p>
 <p><img src="/images/20170924.png" alt="kibana界面"></p>
 <p>kibana绘图：</p>
 <p><img src="/images/20170924_2.png" alt="kibana绘图"></p>
 <p>其他功能研究中~</p>
-<p><script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.2.7/raphael.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/flowchart/1.6.5/flowchart.min.js"></script><textarea id="flowchart-0-code" style="display: none">st=>start: origin
+<script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.2.7/raphael.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/flowchart/1.6.5/flowchart.min.js"></script><textarea id="flowchart-0-code" style="display: none">st=>start: origin
 e=>end: browser
 op1=>operation: logstash处理数据后发送ES
 op2=>operation: ElasticSearch
 op3=>operation: kibana从ES读取数据展示
 
-st->op1->op2->op3->e</textarea><textarea id="flowchart-0-options" style="display: none">{"theme":"simple","scale":1,"line-width":2,"line-length":50,"text-margin":10,"font-size":12}</textarea><script>  var code = document.getElementById("flowchart-0-code").value;  var options = JSON.parse(decodeURIComponent(document.getElementById("flowchart-0-options").value));  var diagram = flowchart.parse(code);  diagram.drawSVG("flowchart-0", options);</script></p>
-
-      
+st->op1->op2->op3->e</textarea><textarea id="flowchart-0-options" style="display: none">{"scale":1,"line-width":2,"line-length":50,"text-margin":10,"font-size":12,"theme":"simple"}</textarea><script>  var code = document.getElementById("flowchart-0-code").value;  var options = JSON.parse(decodeURIComponent(document.getElementById("flowchart-0-options").value));  var diagram = flowchart.parse(code);  diagram.drawSVG("flowchart-0", options);</script>
     </div>
 
     
-
-    
     
     
 
-    
-
-    
-
-    
-      <div>
-        <ul class="post-copyright">
-  <li class="post-copyright-author">
-    <strong>Post author:  </strong>离散汪</li>
-  <li class="post-copyright-link">
-    <strong>Post link: </strong>
-    <a href="https://discrete.dog/2017/09/24/meet-ELK/" title="ELK初体验">https://discrete.dog/2017/09/24/meet-ELK/</a>
-  </li>
-  <li class="post-copyright-license">
-    <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> unless stating additionally.</li>
-</ul>
-
-      </div>
-    
-
-    <footer class="post-footer">
-      
-        <div class="post-tags">
+      <footer class="post-footer">
           
-            <a href="/tags/LINUX/" rel="tag"># LINUX</a>
-          
-            <a href="/tags/analysis/" rel="tag"># analysis</a>
-          
-        </div>
-      
-
-      
-      
-        <div class="post-widgets">
-        
-
-        
-
-        
-          
-          <div id="needsharebutton-postbottom">
-            <span class="btn">
-              <i class="fa fa-share-alt" aria-hidden="true"></i>
-            </span>
-          </div>
-        
-        </div>
-      
-      
-
-      
-        <div class="post-nav">
-          <div class="post-nav-next post-nav-item">
-            
-              <a href="/2017/08/26/hexo-setup-and-config/" rel="next" title="hexo安装与设置">
-                <i class="fa fa-chevron-left"></i> hexo安装与设置
-              </a>
-            
+          <div class="post-tags">
+              <a href="/tags/LINUX/" rel="tag"><i class="fa fa-tag"></i> LINUX</a>
+              <a href="/tags/analysis/" rel="tag"><i class="fa fa-tag"></i> analysis</a>
           </div>
 
-          <span class="post-nav-divider"></span>
+        
 
-          <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/11/18/meander-in-November-1/" rel="prev" title="十一月的一些小想法（一）">
-                十一月的一些小想法（一） <i class="fa fa-chevron-right"></i>
-              </a>
-            
-          </div>
-        </div>
-      
 
-      
-      
-    </footer>
-  </div>
-  
-  
-  
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2017/08/26/hexo-setup-and-config/" rel="prev" title="hexo安装与设置">
+      <i class="fa fa-chevron-left"></i> hexo安装与设置
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2017/11/18/meander-in-November-1/" rel="next" title="十一月的一些小想法（一）">
+      十一月的一些小想法（一） <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
   </article>
+  
+  
+  
 
-
-
-    <div class="post-spread">
-      
-    </div>
-  </div>
 
 
           </div>
           
+    <div class="comments" id="gitalk-container"></div>
 
-  
-    <div class="comments" id="comments">
-      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMDE1My82NzA4"></div>
-    </div>
-
-  
-
-
-
-        </div>
-        
-          
-  
-  <div class="sidebar-toggle">
-    <div class="sidebar-toggle-line-wrap">
-      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
-      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
-      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
-    </div>
-  </div>
-
-  <aside id="sidebar" class="sidebar">
-    
-    <div class="sidebar-inner">
-
-      
-
-      
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
-            Table of Contents
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
-            Overview
-          </li>
-        </ul>
-      
-
-      <section class="site-overview-wrap sidebar-panel">
-        <div class="site-overview">
-          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-            
-              <img class="site-author-image" itemprop="image"
-                src="/images/avatar.png"
-                alt="离散汪" />
-            
-              <p class="site-author-name" itemprop="name">离散汪</p>
-              <p class="site-description motion-element" itemprop="description">农村进城务工人员</p>
-          </div>
-
-          
-            <nav class="site-state motion-element">
-              
-                <div class="site-state-item site-state-posts">
-                
-                  <a href="/archives/">
-                
-                    <span class="site-state-item-count">18</span>
-                    <span class="site-state-item-name">posts</span>
-                  </a>
-                </div>
-              
-
-              
-
-              
-                
-                
-                <div class="site-state-item site-state-tags">
-                  <a href="/tags/index.html">
-                    
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                    <span class="site-state-item-count">18</span>
-                    <span class="site-state-item-name">tags</span>
-                  </a>
-                </div>
-              
-            </nav>
-          
-
-          
-
-          
-            <div class="links-of-author motion-element">
-              
-                <span class="links-of-author-item">
-                  <a href="mailto:xujk@live.cn" target="_blank" title="E-Mail"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
-                  
-                </span>
-              
-                <span class="links-of-author-item">
-                  <a href="https://twitter.com/Bobbie_IEEE" target="_blank" title="Twitter"><i class="fa fa-fw fa-twitter"></i>Twitter</a>
-                  
-                </span>
-              
-                <span class="links-of-author-item">
-                  <a href="https://weibo.com/xxxuIEEE" target="_blank" title="Weibo"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
-                  
-                </span>
-              
-                <span class="links-of-author-item">
-                  <a href="https://www.douban.com/people/toneytonight" target="_blank" title="Douban"><i class="fa fa-fw fa-heart"></i>Douban</a>
-                  
-                </span>
-              
-            </div>
-          
-
-          
-          
-            <div class="cc-license motion-element" itemprop="license">
-              <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" target="_blank">
-                <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons" />
-              </a>
-            </div>
-          
-
-          
-          
-
-          
-            
-          
-          
-
-        </div>
-      </section>
-
-      
-      <!--noindex-->
-        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-
-            
-              
-            
-
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#ELK是什么？"><span class="nav-number">1.</span> <span class="nav-text">ELK是什么？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#安装ELK"><span class="nav-number">2.</span> <span class="nav-text">安装ELK</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#系统环境"><span class="nav-number">2.1.</span> <span class="nav-text">系统环境</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#java环境"><span class="nav-number">2.2.</span> <span class="nav-text">java环境</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装ELK-1"><span class="nav-number">2.3.</span> <span class="nav-text">安装ELK</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置启动"><span class="nav-number">2.4.</span> <span class="nav-text">配置启动</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#logstash"><span class="nav-number">2.4.1.</span> <span class="nav-text">logstash</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#简单测试"><span class="nav-number">2.4.1.1.</span> <span class="nav-text">简单测试</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#简单配置"><span class="nav-number">2.4.1.2.</span> <span class="nav-text">简单配置</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#input"><span class="nav-number">2.4.1.2.1.</span> <span class="nav-text">input{}</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#filter"><span class="nav-number">2.4.1.2.2.</span> <span class="nav-text">filter{}</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#grok"><span class="nav-number">2.4.1.2.2.1.</span> <span class="nav-text">grok</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#date"><span class="nav-number">2.4.1.2.2.2.</span> <span class="nav-text">date</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#json"><span class="nav-number">2.4.1.2.2.3.</span> <span class="nav-text">json</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#split"><span class="nav-number">2.4.1.2.2.4.</span> <span class="nav-text">split</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#其他"><span class="nav-number">2.4.1.2.2.5.</span> <span class="nav-text">其他</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#output"><span class="nav-number">2.4.1.2.3.</span> <span class="nav-text">output{}</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#其他-1"><span class="nav-number">2.4.1.2.4.</span> <span class="nav-text">其他</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#启动logstash"><span class="nav-number">2.4.1.3.</span> <span class="nav-text">启动logstash</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Elasticsearch"><span class="nav-number">2.4.2.</span> <span class="nav-text">Elasticsearch</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#kibana"><span class="nav-number">2.4.3.</span> <span class="nav-text">kibana</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#结语"><span class="nav-number">2.5.</span> <span class="nav-text">结语</span></a></li></ol></li></ol></div>
-            
-
-          </div>
-        </section>
-      <!--/noindex-->
-      
-
-      
-
-    </div>
-  </aside>
-
-
-        
-      </div>
-    </main>
-
-    <footer id="footer" class="footer">
-      <div class="footer-inner">
-        <div class="copyright">&copy; 2016 &mdash; <span itemprop="copyrightYear">2018</span>
-  <span class="with-love" id="animate">
-    <i class="fa fa-user"></i>
-  </span>
-  <span class="author" itemprop="copyrightHolder">离散汪</span>
-
-  
-
-  
-</div>
-
-
-
-
-  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> v3.7.1</div>
-
-
-
-  <span class="post-meta-divider">|</span>
-
-
-
-  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/theme-next/hexo-theme-next">NexT.Pisces</a> v6.3.0</div>
-
-
-
-
-        
-<div class="busuanzi-count">
-  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-
-  
-    <span class="site-uv" title="Total Visitors">
-      <i class="fa fa-user"></i>
-      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
-    </span>
-  
-
-  
-    <span class="site-pv" title="Total Views">
-      <i class="fa fa-eye"></i>
-      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
-    </span>
-  
-</div>
-
-
-
-
-
-
-
-
-
-        
-      </div>
-    </footer>
-
-    
-      <div class="back-to-top">
-        <i class="fa fa-arrow-up"></i>
-        
-      </div>
-    
-
-    
-
-  </div>
-
-  
-
-<script type="text/javascript">
-  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
-    window.Promise = null;
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
   }
 </script>
 
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#ELK是什么？"><span class="nav-number">1.</span> <span class="nav-text">ELK是什么？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#安装ELK"><span class="nav-number">2.</span> <span class="nav-text">安装ELK</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#系统环境"><span class="nav-number">2.1.</span> <span class="nav-text">系统环境</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#java环境"><span class="nav-number">2.2.</span> <span class="nav-text">java环境</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装ELK-1"><span class="nav-number">2.3.</span> <span class="nav-text">安装ELK</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置启动"><span class="nav-number">2.4.</span> <span class="nav-text">配置启动</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#logstash"><span class="nav-number">2.4.1.</span> <span class="nav-text">logstash</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#简单测试"><span class="nav-number">2.4.1.1.</span> <span class="nav-text">简单测试</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#简单配置"><span class="nav-number">2.4.1.2.</span> <span class="nav-text">简单配置</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#input"><span class="nav-number">2.4.1.2.1.</span> <span class="nav-text">input{}</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#filter"><span class="nav-number">2.4.1.2.2.</span> <span class="nav-text">filter{}</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#grok"><span class="nav-number">2.4.1.2.2.1.</span> <span class="nav-text">grok</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#date"><span class="nav-number">2.4.1.2.2.2.</span> <span class="nav-text">date</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#json"><span class="nav-number">2.4.1.2.2.3.</span> <span class="nav-text">json</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#split"><span class="nav-number">2.4.1.2.2.4.</span> <span class="nav-text">split</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#其他"><span class="nav-number">2.4.1.2.2.5.</span> <span class="nav-text">其他</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#output"><span class="nav-number">2.4.1.2.3.</span> <span class="nav-text">output{}</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#其他-1"><span class="nav-number">2.4.1.2.4.</span> <span class="nav-text">其他</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#启动logstash"><span class="nav-number">2.4.1.3.</span> <span class="nav-text">启动logstash</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Elasticsearch"><span class="nav-number">2.4.2.</span> <span class="nav-text">Elasticsearch</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#kibana"><span class="nav-number">2.4.3.</span> <span class="nav-text">kibana</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#结语"><span class="nav-number">2.5.</span> <span class="nav-text">结语</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="波比Bobbie"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">波比Bobbie</p>
+  <div class="site-description" itemprop="description">农村进城务工人员的木头活儿</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">18</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/xxxuIEEE" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;xxxuIEEE" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/Bobbie_IEEE" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;Bobbie_IEEE" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:xujk@live.cn" title="E-Mail → mailto:xujk@live.cn" rel="noopener" target="_blank"><i class="fas fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/images/weixin.jpeg" title="Wechat → &#x2F;images&#x2F;weixin.jpeg"><i class="fab fa-weixin fa-fw"></i>Wechat</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="http://www.beian.miit.gov.cn/" rel="noopener" target="_blank">浙ICP备20009468号<div> </div> </a>
+      <img src="/images/beian.png" style="display: inline-block;"><a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=33010602010855" rel="noopener" target="_blank">浙公网安备 33010602010855号 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Bobbie</span>
+</div>
+
+        
 
 
 
@@ -1056,10 +543,35 @@ st->op1->op2->op3->e</textarea><textarea id="flowchart-0-options" style="display
 
 
 
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
 
 
 
 
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
 
 
 
@@ -1074,458 +586,28 @@ st->op1->op2->op3->e</textarea><textarea id="flowchart-0-options" style="display
 
 
   
-  
-    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
-  
-
-  
-  
-    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
-  
-
-  
-  
-    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
-  
-
 
   
 
-
-  <script type="text/javascript" src="/js/src/utils.js?v=6.3.0"></script>
-
-  <script type="text/javascript" src="/js/src/motion.js?v=6.3.0"></script>
-
-
-
-  
-  
-
-
-  <script type="text/javascript" src="/js/src/affix.js?v=6.3.0"></script>
-
-  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.3.0"></script>
-
-
-
-  
-  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.3.0"></script>
-<script type="text/javascript" src="/js/src/post-details.js?v=6.3.0"></script>
-
-
-
-  
-
-
-  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.3.0"></script>
-
-
-
-  
-
-
-
-	
-
-
-
-
-
-  
-
-
-
-
-
-  
-    <script type="text/javascript">
-      (function(d, s) {
-        var j, e = d.getElementsByTagName(s)[0];
-        if (typeof LivereTower === 'function') { return; }
-        j = d.createElement(s);
-        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
-        j.async = true;
-        e.parentNode.insertBefore(j, e);
-      })(document, 'script');
-    </script>
-  
-
-
-
-
-
-
-
-
-
-
-  
-
-  <script type="text/javascript">
-    // Popup Window;
-    var isfetched = false;
-    var isXml = true;
-    // Search DB path;
-    var search_path = "search.xml";
-    if (search_path.length === 0) {
-      search_path = "search.xml";
-    } else if (/json$/i.test(search_path)) {
-      isXml = false;
-    }
-    var path = "/" + search_path;
-    // monitor main search box;
-
-    var onPopupClose = function (e) {
-      $('.popup').hide();
-      $('#local-search-input').val('');
-      $('.search-result-list').remove();
-      $('#no-result').remove();
-      $(".local-search-pop-overlay").remove();
-      $('body').css('overflow', '');
-    }
-
-    function proceedsearch() {
-      $("body")
-        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
-        .css('overflow', 'hidden');
-      $('.search-popup-overlay').click(onPopupClose);
-      $('.popup').toggle();
-      var $localSearchInput = $('#local-search-input');
-      $localSearchInput.attr("autocapitalize", "none");
-      $localSearchInput.attr("autocorrect", "off");
-      $localSearchInput.focus();
-    }
-
-    // search function;
-    var searchFunc = function(path, search_id, content_id) {
-      'use strict';
-
-      // start loading animation
-      $("body")
-        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
-          '<div id="search-loading-icon">' +
-          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
-          '</div>' +
-          '</div>')
-        .css('overflow', 'hidden');
-      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
-
-      
-
-      $.ajax({
-        url: path,
-        dataType: isXml ? "xml" : "json",
-        async: true,
-        success: function(res) {
-          // get the contents from search data
-          isfetched = true;
-          $('.popup').detach().appendTo('.header-inner');
-          var datas = isXml ? $("entry", res).map(function() {
-            return {
-              title: $("title", this).text(),
-              content: $("content",this).text(),
-              url: $("url" , this).text()
-            };
-          }).get() : res;
-          var input = document.getElementById(search_id);
-          var resultContent = document.getElementById(content_id);
-          var inputEventFunction = function() {
-            var searchText = input.value.trim().toLowerCase();
-            var keywords = searchText.split(/[\s\-]+/);
-            if (keywords.length > 1) {
-              keywords.push(searchText);
-            }
-            var resultItems = [];
-            if (searchText.length > 0) {
-              // perform local searching
-              datas.forEach(function(data) {
-                var isMatch = false;
-                var hitCount = 0;
-                var searchTextCount = 0;
-                var title = data.title.trim();
-                var titleInLowerCase = title.toLowerCase();
-                var content = data.content.trim().replace(/<[^>]+>/g,"");
-                
-                var contentInLowerCase = content.toLowerCase();
-                var articleUrl = decodeURIComponent(data.url);
-                var indexOfTitle = [];
-                var indexOfContent = [];
-                // only match articles with not empty titles
-                if(title != '') {
-                  keywords.forEach(function(keyword) {
-                    function getIndexByWord(word, text, caseSensitive) {
-                      var wordLen = word.length;
-                      if (wordLen === 0) {
-                        return [];
-                      }
-                      var startPosition = 0, position = [], index = [];
-                      if (!caseSensitive) {
-                        text = text.toLowerCase();
-                        word = word.toLowerCase();
-                      }
-                      while ((position = text.indexOf(word, startPosition)) > -1) {
-                        index.push({position: position, word: word});
-                        startPosition = position + wordLen;
-                      }
-                      return index;
-                    }
-
-                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
-                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
-                  });
-                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
-                    isMatch = true;
-                    hitCount = indexOfTitle.length + indexOfContent.length;
-                  }
-                }
-
-                // show search results
-
-                if (isMatch) {
-                  // sort index by position of keyword
-
-                  [indexOfTitle, indexOfContent].forEach(function (index) {
-                    index.sort(function (itemLeft, itemRight) {
-                      if (itemRight.position !== itemLeft.position) {
-                        return itemRight.position - itemLeft.position;
-                      } else {
-                        return itemLeft.word.length - itemRight.word.length;
-                      }
-                    });
-                  });
-
-                  // merge hits into slices
-
-                  function mergeIntoSlice(text, start, end, index) {
-                    var item = index[index.length - 1];
-                    var position = item.position;
-                    var word = item.word;
-                    var hits = [];
-                    var searchTextCountInSlice = 0;
-                    while (position + word.length <= end && index.length != 0) {
-                      if (word === searchText) {
-                        searchTextCountInSlice++;
-                      }
-                      hits.push({position: position, length: word.length});
-                      var wordEnd = position + word.length;
-
-                      // move to next position of hit
-
-                      index.pop();
-                      while (index.length != 0) {
-                        item = index[index.length - 1];
-                        position = item.position;
-                        word = item.word;
-                        if (wordEnd > position) {
-                          index.pop();
-                        } else {
-                          break;
-                        }
-                      }
-                    }
-                    searchTextCount += searchTextCountInSlice;
-                    return {
-                      hits: hits,
-                      start: start,
-                      end: end,
-                      searchTextCount: searchTextCountInSlice
-                    };
-                  }
-
-                  var slicesOfTitle = [];
-                  if (indexOfTitle.length != 0) {
-                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
-                  }
-
-                  var slicesOfContent = [];
-                  while (indexOfContent.length != 0) {
-                    var item = indexOfContent[indexOfContent.length - 1];
-                    var position = item.position;
-                    var word = item.word;
-                    // cut out 100 characters
-                    var start = position - 20;
-                    var end = position + 80;
-                    if(start < 0){
-                      start = 0;
-                    }
-                    if (end < position + word.length) {
-                      end = position + word.length;
-                    }
-                    if(end > content.length){
-                      end = content.length;
-                    }
-                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
-                  }
-
-                  // sort slices in content by search text's count and hits' count
-
-                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
-                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
-                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
-                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
-                      return sliceRight.hits.length - sliceLeft.hits.length;
-                    } else {
-                      return sliceLeft.start - sliceRight.start;
-                    }
-                  });
-
-                  // select top N slices in content
-
-                  var upperBound = parseInt('1');
-                  if (upperBound >= 0) {
-                    slicesOfContent = slicesOfContent.slice(0, upperBound);
-                  }
-
-                  // highlight title and content
-
-                  function highlightKeyword(text, slice) {
-                    var result = '';
-                    var prevEnd = slice.start;
-                    slice.hits.forEach(function (hit) {
-                      result += text.substring(prevEnd, hit.position);
-                      var end = hit.position + hit.length;
-                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
-                      prevEnd = end;
-                    });
-                    result += text.substring(prevEnd, slice.end);
-                    return result;
-                  }
-
-                  var resultItem = '';
-
-                  if (slicesOfTitle.length != 0) {
-                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
-                  } else {
-                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
-                  }
-
-                  slicesOfContent.forEach(function (slice) {
-                    resultItem += "<a href='" + articleUrl + "'>" +
-                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
-                      "...</p>" + "</a>";
-                  });
-
-                  resultItem += "</li>";
-                  resultItems.push({
-                    item: resultItem,
-                    searchTextCount: searchTextCount,
-                    hitCount: hitCount,
-                    id: resultItems.length
-                  });
-                }
-              })
-            };
-            if (keywords.length === 1 && keywords[0] === "") {
-              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
-            } else if (resultItems.length === 0) {
-              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
-            } else {
-              resultItems.sort(function (resultLeft, resultRight) {
-                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
-                  return resultRight.searchTextCount - resultLeft.searchTextCount;
-                } else if (resultLeft.hitCount !== resultRight.hitCount) {
-                  return resultRight.hitCount - resultLeft.hitCount;
-                } else {
-                  return resultRight.id - resultLeft.id;
-                }
-              });
-              var searchResultList = '<ul class=\"search-result-list\">';
-              resultItems.forEach(function (result) {
-                searchResultList += result.item;
-              })
-              searchResultList += "</ul>";
-              resultContent.innerHTML = searchResultList;
-            }
-          }
-
-          if ('auto' === 'auto') {
-            input.addEventListener('input', inputEventFunction);
-          } else {
-            $('.search-icon').click(inputEventFunction);
-            input.addEventListener('keypress', function (event) {
-              if (event.keyCode === 13) {
-                inputEventFunction();
-              }
-            });
-          }
-
-          // remove loading animation
-          $(".local-search-pop-overlay").remove();
-          $('body').css('overflow', '');
-
-          proceedsearch();
-        }
-      });
-    }
-
-    // handle and trigger popup window;
-    $('.popup-trigger').click(function(e) {
-      e.stopPropagation();
-      if (isfetched === false) {
-        searchFunc(path, 'local-search-input', 'local-search-result');
-      } else {
-        proceedsearch();
-      };
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : 'f2fc1784d71f64fa9252',
+      clientSecret: '68bff7bb5be97610714ee7586491c8107dbda705',
+      repo        : '',
+      owner       : 'xujingkai',
+      admin       : ['xujingkai'],
+      id          : 'a53a113f9fdeb5e0403bc21c1c9fec2e',
+        language: '',
+      distractionFreeMode: true
     });
-
-    $('.popup-btn-close').click(onPopupClose);
-    $('.popup').click(function(e){
-      e.stopPropagation();
-    });
-    $(document).on('keyup', function (event) {
-      var shouldDismissSearchPopup = event.which === 27 &&
-        $('.search-popup').is(':visible');
-      if (shouldDismissSearchPopup) {
-        onPopupClose();
-      }
-    });
-  </script>
-
-
-
-
-
-  
-
-  
-
-  
-
-  
-
-  
-  
-  
-  <script src="/lib/needsharebutton/needsharebutton.js"></script>
-
-  <script>
-    
-      pbOptions = {};
-      
-          pbOptions.iconStyle = "default";
-      
-          pbOptions.boxForm = "horizontal";
-      
-          pbOptions.position = "bottomCenter";
-      
-          pbOptions.networks = "Weibo,Wechat,Douban,Evernote,Mailto";
-      
-      new needShareButton('#needsharebutton-postbottom', pbOptions);
-    
-    
-  </script>
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
 
 </body>
 </html>
